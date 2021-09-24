@@ -34,7 +34,6 @@ Date command example:
 import unix.shell.cmd.core.date.Date;
 
 ...
-
 	Date date = new Date();
 
 	date.specify("15 Dec 2013");
@@ -51,7 +50,6 @@ Other date str specifying examples:
 ```java
 import unix.shell.cmd.core.date.Date;
 ...
-
 	Date date = new Date();
 
 	// day
@@ -93,7 +91,6 @@ Specify time zone with JUnixShell TimeZone enum based on IANA 2021a (Released 20
 import unix.shell.cmd.core.date.Date;
 import unix.shell.cmd.core.date.TimeZone;
 ...
- 
 	Date date = new Date();
 	date.specify("24 September 2003 08:52pm", TimeZone.EUROPE.PARIS);
 ```
@@ -104,7 +101,6 @@ Unix date command also supports some relative expressions:
 
 import unix.shell.cmd.core.date.Date;
 ...
- 
 	Date date = new Date();
 	
 	date.specify("first fri");
@@ -129,4 +125,165 @@ import unix.shell.cmd.core.date.Date;
 	date.specify("@1"); // or @+1 gives Epoch + 1 second
 	date.specify("@-10"); // gives Epoch - 10 second
 	date.specify("@915148800");
+```
+
+OptionBehavior is used to implement command options, so if one overrides/excludes/requires another, the library will dynamically organize dependencies, as follows: 
+
+```java
+package unix.shell.cmd.opt.mod;
+
+import java.util.HashSet;
+
+public interface OptionBehavior<OptionType> {
+
+	public default HashSet<OptionType> optionsExcluded() {
+		return null;
+	}
+
+	public default HashSet<OptionType> optionsOverridden() {
+		return null;
+	}
+
+	public default HashSet<OptionType> optionsEqualed() {
+		return null;
+	}
+
+	public default HashSet<OptionType> optionsRequired() {
+		return null;
+	}
+}
+```
+
+See an example about option behavior:
+
+```java
+import unix.shell.cmd.core.date.Date;
+import unix.shell.cmd.core.date.format.RFC_3339_TIMESPEC;
+...
+	Date date = new Date();
+	date.format_RFC_5322();
+
+	date.format_RFC_3339(RFC_3339_TIMESPEC.SECONDS);
+	date.format_RFC_3339(RFC_3339_TIMESPEC.NANOSECONDS);
+	
+	date.print();
+```
+
+The output will be (see --rfc-3339 excludes --rfc-email)
+```
+date --rfc-3339=ns
+```
+
+You can design date print format very easily (All types of arguments are separated by the library.)
+
+```java
+import unix.shell.cmd.core.date.Date;
+import unix.shell.cmd.core.date.TimeZone;
+import unix.shell.cmd.core.date.format.DateForm;
+import unix.shell.cmd.core.date.format.DateFormPadding;
+...
+	Date date = new Date();
+	date.specify("24 September 2003 08:52pm", TimeZone.ANTARCTICA.CASEY);
+	
+	date.customizePrint(DateForm.DAYNAME + " " + DateForm.DAYOF_MONTH);
+	date.print();
+	
+	date.customizePrint(DateForm.DAYNAME + " " + new DateForm(DateForm.DAYOF_MONTH).padding(DateFormPadding.NO_PADDING));
+	date.print();
+	
+	date.customizePrint(new DateForm(DateForm.DAYNAME_SHORT).upperCase() + " " + DateForm.DAYOF_MONTH);
+	date.print();
+	
+	date.specify("24 Sept 2003 08:52pm", TimeZone.ANTARCTICA.CASEY);
+	date.customizePrint(DateForm.H24_MIN + " (" + DateForm.H12 + ":" + DateForm.MIN + " " + DateForm.MERIDIEM_LC + ")");
+	date.print();
+	
+	date.customizePrint("The time was " + DateForm.TIME_H24MINSEC);
+	date.print();
+	
+	// To print the current full month name and the day of the month:
+	date.specify("now");
+	date.customizePrint(DateForm.MONTHNAME + " " + DateForm.DAYOF_MONTH);
+	date.print();
+```
+
+The outputs will be:
+```
+date --date='TZ="Antarctica/Casey" 24 September 2003 08:52pm' '+%A %d'
+date --date='TZ="Antarctica/Casey" 24 September 2003 08:52pm' '+%A %-d'
+date --date='TZ="Antarctica/Casey" 24 September 2003 08:52pm' '+%^a %d'
+date --date='TZ="Antarctica/Casey" 24 Sept 2003 08:52pm' '+%R (%I:%M %P)'
+date --date='TZ="Antarctica/Casey" 24 Sept 2003 08:52pm' '+The time was %T'
+date --date='now' '+%B %d'
+```
+
+An example of command substitution (Command substitution allows the output of a command to replace the command itself):
+
+```java
+import unix.shell.cmd.core.date.Date;
+import unix.shell.cmd.core.date.format.DateForm;
+...
+	Date date = new Date();
+	Date otherDate = new Date();
+	otherDate.specify("15 June 2013 10:12am");
+
+	date.specify(otherDate + " -5 days");
+	date.customizePrint(DateForm.MONTHNAME + " " + DateForm.DAYOF_MONTH);
+	
+	date.print();
+```
+
+The output will be:
+```
+date --date="$( date --date='15 June 2013 10:12am' ) -5 days" '+%B %d'
+```
+
+Date set examples:
+
+```java
+import unix.shell.cmd.core.date.Date;
+...
+	Date date = new Date();
+	
+	/**
+	 * Because of this error "date: the options to print and set the time may not be
+	 * used together" all option and arguments related date specification will be
+	 * removed. (option behavior implementation)
+	 */
+	date.specify("15 June 2013 10:12am");
+	date.print();
+	
+	date.set("-2 days");
+	date.print();
+	
+	// use other date to set
+	date = new Date();
+	Date aDate = new Date();
+	aDate.specify("15 June 2013 10:12am");
+	
+	date.set(aDate + "+5 days");
+	date.print();
+```
+
+The outputs will be:
+```
+date --date='15 June 2013 10:12am'
+date --set='-2 days'
+date --set="$( date --date='15 June 2013 10:12am' )+5 days"
+```
+
+Use java LocalDateTime class to specify date:
+
+```java
+import unix.shell.cmd.core.date.Date;
+...
+	Date date = new Date();
+	
+	date.specify(LocalDateTime.now().minusYears(5).minusDays(25).toString());
+	date.print();
+```
+
+The output will be:
+```
+date --date='2016-08-30T23:20:53.505916100'
 ```

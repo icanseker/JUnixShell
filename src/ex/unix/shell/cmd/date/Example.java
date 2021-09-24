@@ -77,138 +77,137 @@ public class Example {
 		date.specify("@-10"); // gives Epoch - 10 second
 		date.specify("@915148800");
 
-//		// specify a file includes a 'datestr' each line
-//		date.sourceFile("/file/path of datestr each line.ext");
-//
-//		// reference a file to specify date as file's last modification date
-//		date.referenceFile("/file/reference.ext");
-//
-//		date.specify("24 September 2003 08:52pm", TimeZone.ANTARCTICA.CASEY);
-//
-//		// format rfc 5322
-//		date.format_RFC_5322();
-//
-//		// format rfc 3339
-//		date.format_RFC_3339(RFC_3339_TIMESPEC.SECONDS);
-//		date.format_RFC_3339(RFC_3339_TIMESPEC.NANOSECONDS);
-//
-//		// format iso 8601
-//		date.format_ISO_8601(); // same as date.format_ISO_8601(ISO_8601_TIMESPEC.DATE);
-//		date.format_ISO_8601(ISO_8601_TIMESPEC.HOURS);
-//		date.format_ISO_8601(ISO_8601_TIMESPEC.DATE);
-//
-//		// lets design out date format
-//		date.specify("now");
-//
-//		/**
-//		 * command line: date --date='now' '+%a'
-//		 */
-//		date.customizePrint(DateForm.DAYNAME_SHORT);
-//
-//		date.customizePrint(DateForm.DAYNAME + " " + DateForm.DAYOF_MONTH); // Saturday 01
-//		//
-//
-//		/**
-//		 * command line: date --date='now' '+%A %-d'
-//		 */
-//		date.customizePrint( // Saturday 1
-//				DateForm.DAYNAME + " " + //
-//						new DateForm(DateForm.DAYOF_MONTH).padding(DateFormPadding.NO_PADDING) //
-//		);
-//
-//		/**
-//		 * command line: date --date='now' '+%^a %d'
-//		 */
-//		date.customizePrint(//
-//				new DateForm(DateForm.DAYNAME_SHORT).upperCase() + //
-//						" " + DateForm.DAYOF_MONTH//
-//		); // THU 23
-//
-//		date.specify("01/05/651");
-//
-//		/**
-//		 * command line:
-//		 * 
-//		 * date --date='01/05/651' '+%A %-d, %04Y'
-//		 */
-//		date.customizePrint( // Saturday 1
-//				DateForm.DAYNAME + " " + //
-//						new DateForm(DateForm.DAYOF_MONTH).padding(DateFormPadding.NO_PADDING) + ", " + //
-//						new DateForm(DateForm.YEAR_4DIGIT).padding(DateFormPadding.ZERO, 4)//
-//		);
-//
-//		date.specify("24 Sept 2003 08:52pm", TimeZone.ANTARCTICA.CASEY);
-//
-//		/**
-//		 * command line:
-//		 * 
-//		 * date --date='TZ="Antarctica/Casey" 24 Sept 2003 08:52pm' '+%R (%I:%M %P)'
-//		 */
-//		date.customizePrint(
-//				DateForm.H24_MIN + " (" + DateForm.H12 + ":" + DateForm.MIN + " " + DateForm.MERIDIEM_LC + ")");
-//
-//		/**
-//		 * command line:
-//		 * 
-//		 * date --date='TZ="Antarctica/Casey" 24 Sept 2003 08:52pm' '+The time was %T'
-//		 */
-//		date.customizePrint("The time was " + DateForm.TIME_H24MINSEC);
-//
-//		// To print the current full month name and the day of the month:
-//		date.specify("now");
-//
-//		/**
-//		 * command line:
-//		 * 
-//		 * date --date='now' '+%B %d'
-//		 */
-//		date.customizePrint(DateForm.MONTHNAME + " " + DateForm.DAYOF_MONTH);
-//
-//		// send a date command output as input
-//		Date otherDate = new Date();
-//		otherDate.specify("15 June 2013 10:12am");
-//
-//		date.specify(otherDate);
-//		date.specify(otherDate + " -5 days");
-//
-//		/**
-//		 * command line:
-//		 * 
-//		 * date --date="$( date --date='15 June 2013 10:12am' ) -5 days" '+%B %d, %Y'
-//		 */
-//		date.customizePrint(DateForm.MONTHNAME + " " + DateForm.DAYOF_MONTH + ", " + DateForm.YEAR_4DIGIT);
-//
-//		// set date to two days ago
-//		date = new Date();
-//		/**
-//		 * Because of this error "date: the options to print and set the time may not be
-//		 * used together" all option and arguments related date specification will be
-//		 * removed.
-//		 * 
-//		 * command line:
-//		 * 
-//		 * date --set='-2 days'
-//		 */
-//		date.specify("15 June 2013 10:12am");
-//		date.set("-2 days");
-//
-//		// use other date to set
-//		Date aDate = new Date();
-//		aDate.specify("15 June 2013 10:12am");
-//
-//		/**
-//		 * command line:
-//		 * 
-//		 * date --set="$( date --date='15 June 2013 10:12am' )+5 days"
-//		 */
-//		date.set(aDate + "+5 days");
-//
-//		/**
-//		 * use java local DateTime class to specify date
-//		 */
-//		date = new Date();
-//		date.specify(LocalDateTime.now().minusYears(5).minusDays(25).toString());
-//		date.set(LocalDate.now().minusMonths(3).toString());
+		// specify a file includes a 'datestr' each line
+		date.sourceFile("/file/path of datestr each line.ext");
+
+		// reference a file to specify date as file's last modification date
+		date.referenceFile("/file/reference.ext");
+
+		date.specify("24 September 2003 08:52pm", TimeZone.ANTARCTICA.CASEY);
+
+		// format rfc 5322
+		date.format_RFC_5322();
+
+		// format rfc 3339
+		date.format_RFC_3339(RFC_3339_TIMESPEC.SECONDS);
+		date.format_RFC_3339(RFC_3339_TIMESPEC.NANOSECONDS);
+
+		// format iso 8601
+		date.format_ISO_8601(); // same as date.format_ISO_8601(ISO_8601_TIMESPEC.DATE);
+		date.format_ISO_8601(ISO_8601_TIMESPEC.HOURS);
+		date.format_ISO_8601(ISO_8601_TIMESPEC.DATE);
+
+		// lets design out date format
+		date.specify("now");
+
+		/**
+		 * command line: date --date='now' '+%a'
+		 */
+		date.customizePrint(DateForm.DAYNAME_SHORT);
+
+		date.customizePrint(DateForm.DAYNAME + " " + DateForm.DAYOF_MONTH); // Saturday 01
+
+		/**
+		 * command line: date --date='now' '+%A %-d'
+		 */
+		date.customizePrint( // Saturday 1
+				DateForm.DAYNAME + " " + //
+						new DateForm(DateForm.DAYOF_MONTH).padding(DateFormPadding.NO_PADDING) //
+		);
+
+		/**
+		 * command line: date --date='now' '+%^a %d'
+		 */
+		date.customizePrint(//
+				new DateForm(DateForm.DAYNAME_SHORT).upperCase() + //
+						" " + DateForm.DAYOF_MONTH//
+		); // THU 23
+
+		date.specify("01/05/651");
+
+		/**
+		 * command line:
+		 * 
+		 * date --date='01/05/651' '+%A %-d, %04Y'
+		 */
+		date.customizePrint( // Saturday 1
+				DateForm.DAYNAME + " " + //
+						new DateForm(DateForm.DAYOF_MONTH).padding(DateFormPadding.NO_PADDING) + ", " + //
+						new DateForm(DateForm.YEAR_4DIGIT).padding(DateFormPadding.ZERO, 4)//
+		);
+
+		date.specify("24 Sept 2003 08:52pm", TimeZone.ANTARCTICA.CASEY);
+
+		/**
+		 * command line:
+		 * 
+		 * date --date='TZ="Antarctica/Casey" 24 Sept 2003 08:52pm' '+%R (%I:%M %P)'
+		 */
+		date.customizePrint(
+				DateForm.H24_MIN + " (" + DateForm.H12 + ":" + DateForm.MIN + " " + DateForm.MERIDIEM_LC + ")");
+
+		/**
+		 * command line:
+		 * 
+		 * date --date='TZ="Antarctica/Casey" 24 Sept 2003 08:52pm' '+The time was %T'
+		 */
+		date.customizePrint("The time was " + DateForm.TIME_H24MINSEC);
+
+		// To print the current full month name and the day of the month:
+		date.specify("now");
+
+		/**
+		 * command line:
+		 * 
+		 * date --date='now' '+%B %d'
+		 */
+		date.customizePrint(DateForm.MONTHNAME + " " + DateForm.DAYOF_MONTH);
+
+		// send a date command output as input
+		Date otherDate = new Date();
+		otherDate.specify("15 June 2013 10:12am");
+
+		date.specify(otherDate);
+		date.specify(otherDate + " -5 days");
+
+		/**
+		 * command line:
+		 * 
+		 * date --date="$( date --date='15 June 2013 10:12am' ) -5 days" '+%B %d, %Y'
+		 */
+		date.customizePrint(DateForm.MONTHNAME + " " + DateForm.DAYOF_MONTH + ", " + DateForm.YEAR_4DIGIT);
+
+		// set date to two days ago
+		date = new Date();
+		/**
+		 * Because of this error "date: the options to print and set the time may not be
+		 * used together" all option and arguments related date specification will be
+		 * removed.
+		 * 
+		 * command line:
+		 * 
+		 * date --set='-2 days'
+		 */
+		date.specify("15 June 2013 10:12am");
+		date.set("-2 days");
+
+		// use other date to set
+		Date aDate = new Date();
+		aDate.specify("15 June 2013 10:12am");
+
+		/**
+		 * command line:
+		 * 
+		 * date --set="$( date --date='15 June 2013 10:12am' )+5 days"
+		 */
+		date.set(aDate + "+5 days");
+
+		/**
+		 * use java local DateTime class to specify date
+		 */
+		date = new Date();
+		date.specify(LocalDateTime.now().minusYears(5).minusDays(25).toString());
+		date.set(LocalDate.now().minusMonths(3).toString());
 
 		date.print();
 	}
