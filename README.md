@@ -5,9 +5,9 @@ The major purpose of JUnixShell is to create a structure that is compatible with
 Easy to create shell command lines (expansions, pipelines, fields, and so on).
 
 Currently supported shell features: (The project is still in the works.)
-* Shell syntax
-* ShellCommands (option overriding/excluding/requiring/equaling carried out dynamically)
-* Shell parameters
+* Shell Syntax
+* Shell Commands (option overriding/excluding/requiring/equaling carried out dynamically)
+* Shell Parameters
 * Pipelines
 * Shell Expansions
 	* Brace Expansion
