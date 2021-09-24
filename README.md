@@ -10,15 +10,15 @@ Currently supported shell features: (The project is still in the works.)
 * Shell parameters
 * Pipelines
 * Shell Expansions
-** Brace Expansion
-** Tilde Expansion
-** Shell Parameter Expansion
-** Command Substitution
-** Arithmetic Expansion
-** Process Substitution
-** Word Splitting
-** Filename Expansion
-** Quote Removal
+	* Brace Expansion
+	* Tilde Expansion
+	* Shell Parameter Expansion
+	* Command Substitution
+	* Arithmetic Expansion
+	* Process Substitution
+	* Word Splitting
+	* Filename Expansion
+	* Quote Removal
 * Redirections (stdin, stdout, stderr)
 
 Currently supported shell commands: (The project is still in the works.)
