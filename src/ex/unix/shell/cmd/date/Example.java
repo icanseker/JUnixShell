@@ -49,34 +49,34 @@ public class Example {
 		date.specify("TZ=\"Europe/Paris\" 24 September 2003 08:52pm"); // meaning: What date is it if it's September
 																		// 24, 2003, at 8:52 p.m. in Europe/Paris?
 		date.specify("TZ=\"Africa/Addis_Ababa\" 2004-10-31 06:30");
-//
-//		// define time zone with TimeZone class
-//		date.specify("24 September 2003 08:52pm", TimeZone.EUROPE.PARIS);
-//
-//		// relative items
-//		date.specify("first fri");
-//		date.specify("next tuesday");
-//		date.specify("last tuesday");
-//		date.specify("twelfth monday");
-//		date.specify("this sunday");
-//		date.specify("tomorrow");
-//		date.specify("3 days ago");
-//		date.specify("30000 days ago");
-//		date.specify("-2 month");
-//		date.specify("+300 year");
-//
-//		// To print the date of the day three months and one day hence:
-//		date.specify("3 months 1 day");
-//
-//		date.specify("-2 month -3 days");
-//		date.specify("-5 years -2 month +3 days");
-//
-//		// seconds since the Epoch (Epoch = date -d '@0')
-//		date.specify("@0"); // gives Epoch
-//		date.specify("@1"); // or @+1 gives Epoch + 1 second
-//		date.specify("@-10"); // gives Epoch - 10 second
-//		date.specify("@915148800");
-//
+
+		// define time zone with TimeZone class
+		date.specify("24 September 2003 08:52pm", TimeZone.EUROPE.PARIS);
+
+		// relative items
+		date.specify("first fri");
+		date.specify("next tuesday");
+		date.specify("last tuesday");
+		date.specify("twelfth monday");
+		date.specify("this sunday");
+		date.specify("tomorrow");
+		date.specify("3 days ago");
+		date.specify("30000 days ago");
+		date.specify("-2 month");
+		date.specify("+300 year");
+
+		// To print the date of the day three months and one day hence:
+		date.specify("3 months 1 day");
+
+		date.specify("-2 month -3 days");
+		date.specify("-5 years -2 month +3 days");
+
+		// seconds since the Epoch (Epoch = date -d '@0')
+		date.specify("@0"); // gives Epoch
+		date.specify("@1"); // or @+1 gives Epoch + 1 second
+		date.specify("@-10"); // gives Epoch - 10 second
+		date.specify("@915148800");
+
 //		// specify a file includes a 'datestr' each line
 //		date.sourceFile("/file/path of datestr each line.ext");
 //
