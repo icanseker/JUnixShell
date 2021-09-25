@@ -1,5 +1,7 @@
 package unix.shell.cmd.mod;
 
+import unix.shell.expansion.CommandSubstitution;
+
 public interface CommandLine {
 
 	public String commandLine() throws Exception;
@@ -8,8 +10,8 @@ public interface CommandLine {
 		return commandLine() + " >&/dev/null; echo $?";
 	}
 
-	public default String execute() throws Exception {
-		return "$( " + commandLine() + " )";
+	public default String substitution() throws Exception {
+		return "" + new CommandSubstitution(this);
 	}
 
 	public default void print() throws Exception {

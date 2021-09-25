@@ -1,5 +1,7 @@
 package unix.shell.redirect;
 
+import unix.shell.operator.rd.RedirectionType;
+
 public class UnixRedirection {
 
 	private RedirectionType rdType;

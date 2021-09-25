@@ -179,12 +179,12 @@ public class Date extends UnixCommand<DateOption> {
 
 	public void specify(Date date) throws Exception {
 		if (date != null)
-			addOption(DateSpec.CUSTOM, new DateIdentifier(date.execute()));
+			addOption(DateSpec.CUSTOM, new DateIdentifier(date.substitution()));
 	}
 
 	public void specify(Date date, String... datestr) throws Exception {
 		if (date != null)
-			addOption(DateSpec.CUSTOM, new DateIdentifier(date.execute()));
+			addOption(DateSpec.CUSTOM, new DateIdentifier(date.substitution()));
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class Date extends UnixCommand<DateOption> {
 	public void set(Date date) throws Exception {
 
 		if (date != null)
-			addOption(DateOption.SET, new DateIdentifier(date.execute()));
+			addOption(DateOption.SET, new DateIdentifier(date.substitution()));
 	}
 
 	/**
@@ -314,7 +314,7 @@ public class Date extends UnixCommand<DateOption> {
 	public void set(Date date, String... datestr) throws Exception {
 
 		if (date != null)
-			addOption(DateOption.SET, new DateIdentifier(date.execute()));
+			addOption(DateOption.SET, new DateIdentifier(date.substitution()));
 	}
 
 	/**

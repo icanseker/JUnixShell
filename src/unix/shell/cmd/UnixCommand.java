@@ -215,7 +215,7 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	@Override
 	public String toString() {
 		try {
-			return execute();
+			return substitution();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

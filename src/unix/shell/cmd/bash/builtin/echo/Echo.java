@@ -10,6 +10,11 @@ public class Echo extends UnixCommand<None> {
 		super("echo");
 	}
 
+	@Override
+	public boolean acceptArgument() {
+		return true;
+	}
+
 	public Echo addArgument(String argument) throws Exception {
 		addArgument(new Text(argument));
 		return this;

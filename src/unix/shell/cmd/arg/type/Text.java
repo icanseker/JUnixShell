@@ -10,6 +10,6 @@ public class Text extends Argument {
 
 	@Override
 	public String correspond() {
-		return super.correspond().replace(" ", "\\ ");
+		return super.correspond().replace("\\ ", " ").replace(" ", "\\ ");
 	}
 }
