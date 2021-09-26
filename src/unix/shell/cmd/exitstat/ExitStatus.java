@@ -7,9 +7,6 @@ import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
  * information about the cause of termination, using the exit status. This is a
  * value between 0 and 255 that the exiting process passes as an argument to
  * exit.
- * 
- * @author icanseker@gmail.com
- *
  */
 public class ExitStatus implements ExitStatusInterface {
 

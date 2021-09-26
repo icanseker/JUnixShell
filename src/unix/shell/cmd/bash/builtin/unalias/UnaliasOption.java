@@ -12,11 +12,11 @@ public enum UnaliasOption implements UnixCommandOption<UnaliasOption> {
 	;
 
 	private final Character symbol;
-	private final String varName;
+	private final String paramName;
 
-	private UnaliasOption(Character symbol, String varName) {
+	private UnaliasOption(Character symbol, String paramName) {
 		this.symbol = symbol;
-		this.varName = varName;
+		this.paramName = paramName;
 	}
 
 	private UnaliasOption(Character symbol) {
@@ -33,7 +33,7 @@ public enum UnaliasOption implements UnixCommandOption<UnaliasOption> {
 	}
 
 	@Override
-	public String varName() {
-		return this.varName;
+	public String paramName() {
+		return this.paramName;
 	}
 }

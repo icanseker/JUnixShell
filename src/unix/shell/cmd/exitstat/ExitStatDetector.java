@@ -40,7 +40,6 @@ public class ExitStatDetector<Command extends UnixCommand<?>> {
 		}
 
 		// search for standard exit status
-
 		for (StandardUnixExitStatus exitStatus : StandardUnixExitStatus.values())
 			if (exitStatus.code() == code)
 				return "According to Standard Exit Status: " + exitStatus.meaning();

@@ -41,7 +41,7 @@ public class BraceExpansion extends ShellExpansion {
 	}
 
 	@Override
-	public String correspond() {
+	public String correspond() throws Exception {
 
 		if (arguments.isEmpty())
 			return "{}";

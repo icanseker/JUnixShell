@@ -5,9 +5,6 @@ import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
 /**
  * The unalias utility shall remove the definition for each alias name
  * specified.
- * 
- * @author Developer
- *
  */
 public enum UnaliasExitStatus implements ExitStatusInterface {
 

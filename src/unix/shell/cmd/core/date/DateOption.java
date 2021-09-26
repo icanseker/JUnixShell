@@ -46,19 +46,19 @@ public enum DateOption implements UnixCommandOption<DateOption> {
 	;
 
 	private final Character symbol;
-	private final String varName;
+	private final String paramName;
 
-	private DateOption(Character symbol, String varName) {
+	private DateOption(Character symbol, String paramName) {
 		this.symbol = symbol;
-		this.varName = varName;
+		this.paramName = paramName;
 	}
 
 	private DateOption(Character symbol) {
 		this(symbol, null);
 	}
 
-	private DateOption(String varName) {
-		this(null, varName);
+	private DateOption(String paramName) {
+		this(null, paramName);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public enum DateOption implements UnixCommandOption<DateOption> {
 	}
 
 	@Override
-	public String varName() {
-		return this.varName;
+	public String paramName() {
+		return this.paramName;
 	}
 }

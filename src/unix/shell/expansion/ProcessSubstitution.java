@@ -21,9 +21,4 @@ package unix.shell.expansion;
  * expansion.
  */
 public class ProcessSubstitution extends ShellExpansion {
-
-	@Override
-	public String correspond() {
-		return null;
-	}
 }

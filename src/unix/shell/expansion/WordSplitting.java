@@ -34,9 +34,4 @@ package unix.shell.expansion;
  * Note that if no expansion occurs, no splitting is performed.
  */
 public class WordSplitting extends ShellExpansion {
-
-	@Override
-	public String correspond() {
-		return null;
-	}
 }

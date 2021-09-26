@@ -2,7 +2,7 @@ package unix.shell.cmd.opt;
 
 import unix.shell.cmd.arg.mod.ArgumentBehavior;
 import unix.shell.cmd.arg.mod.ArgumentInterface;
-import unix.shell.cmd.opt.mod.ClassIdentifier;
+import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.opt.mod.OptionBehavior;
 import unix.shell.cmd.opt.mod.SingularOption;
 
@@ -11,15 +11,8 @@ public interface UnixCommandOption<OptionType extends UnixCommandOption<OptionTy
 
 	public Character symbol();
 
-	public String varName();
+	public String paramName();
 
-	/**
-	 * correspond with an argument
-	 * 
-	 * @param argument
-	 * @return
-	 * @throws Exception
-	 */
 	public default String correspond(ArgumentInterface... arguments) throws Exception {
 
 		String classId = this.classId();
@@ -29,7 +22,7 @@ public interface UnixCommandOption<OptionType extends UnixCommandOption<OptionTy
 
 		if (this.acceptArgument() && arguments.length > 0) {
 
-			String optParamCorr = varName();
+			String optParamCorr = paramName();
 			String valueBinder;
 
 			if (optParamCorr == null) {
@@ -71,7 +64,7 @@ public interface UnixCommandOption<OptionType extends UnixCommandOption<OptionTy
 		Character symbol = symbol();
 
 		if (symbol == null)
-			return "--" + varName();
+			return "--" + paramName();
 		else
 			return "-" + String.valueOf(symbol);
 	}

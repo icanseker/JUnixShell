@@ -1,6 +1,6 @@
 package unix.shell.cmd.arg.mod;
 
-public interface ArgumentInterface {
+import unix.shell.cmd.mod.StrCorrespond;
 
-	public String correspond();
+public interface ArgumentInterface extends StrCorrespond {
 }

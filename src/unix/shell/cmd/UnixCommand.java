@@ -1,6 +1,5 @@
 package unix.shell.cmd;
 
-import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,51 +10,69 @@ import java.util.Set;
 
 import unix.shell.cmd.arg.mod.ArgumentBehavior;
 import unix.shell.cmd.arg.mod.ArgumentInterface;
-import unix.shell.cmd.arg.type.BasicPath;
 import unix.shell.cmd.exitstat.StandardUnixExitStatus;
 import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
+import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.mod.CommandLine;
-import unix.shell.cmd.mod.redirect.RedirectInterface;
-import unix.shell.cmd.mod.redirect.RedirectOperand;
-import unix.shell.cmd.mod.redirect.RedirectOutType;
 import unix.shell.cmd.opt.UnixCommandOption;
-import unix.shell.cmd.opt.mod.ClassIdentifier;
+import unix.shell.redirect.RedirectionMap;
+import unix.shell.redirect.mod.Redirection;
 
 public abstract class UnixCommand<CommandOption extends UnixCommandOption<CommandOption>>
-		implements ClassIdentifier, ArgumentBehavior, CommandLine, RedirectInterface {
+		implements ClassIdentifier, ArgumentBehavior, CommandLine {
+
+	private String name;
 
 	/**
+	 * Each command has an exit status-reason map, this will be Standard Exit status
+	 * if not specified.
 	 * 
+	 * <p/>
+	 * ExitStatDetector gets command exit status set and check if any reason defined
+	 * on exit status.
 	 */
-	private String name;
+	public static final Class<? extends ExitStatusInterface> exitStatusEnumSet = StandardUnixExitStatus.class;
+
+	/**
+	 * Holds arguments of the command if it accepts arguments
+	 */
+	private LinkedHashSet<ArgumentInterface> arguments;
 
 	/**
 	 * Holds options of command, mapped by option (unique) id
 	 */
 	private LinkedHashMap<String, UnixCommandOption<CommandOption>> options;
+
 	/**
 	 * Holds arguments of option, mapped by option (unique) id
 	 */
 	private HashMap<String, Set<ArgumentInterface>> optionArguments;
 
-	private LinkedHashSet<ArgumentInterface> arguments;
-
-	private Map.Entry<RedirectOperand, BasicPath> redirectOutEntry;
-	private Map.Entry<RedirectOperand, BasicPath> redirectInEntry;
-
-	public static final Class<? extends ExitStatusInterface> exitStatusEnumSet = StandardUnixExitStatus.class;
-
+	/**
+	 * Each option implements OptionBehavior, which means it contains
+	 * exclude/override/equalized option sets (maybe), which will be held here. If
+	 * an option from the ignored set tries to be added to the command options set,
+	 * it will be ignored.
+	 */
 	private HashSet<String> optionsIgnored; // String = unique id of option
+
+	/**
+	 * Redirections will be held here. And the order is critical (because of Unix
+	 * shell behavior, but this library standardized the order as in, out, err,
+	 * pipes --pipes adding in order of definition).
+	 */
+	private RedirectionMap redirectionMap;
 
 	public UnixCommand(String name) {
 
 		this.name = name;
+		this.arguments = new LinkedHashSet<ArgumentInterface>();
 
 		this.options = new LinkedHashMap<String, UnixCommandOption<CommandOption>>();
 		this.optionArguments = new HashMap<String, Set<ArgumentInterface>>();
-		this.arguments = new LinkedHashSet<ArgumentInterface>();
-
 		this.optionsIgnored = new HashSet<String>();
+
+		this.redirectionMap = new RedirectionMap();
 	}
 
 	protected void addOption(UnixCommandOption<CommandOption> option, ArgumentInterface... arguments) throws Exception {
@@ -126,27 +143,12 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	}
 
 	@Override
-	public void redirectOutTo(String filePath, RedirectOutType redirectType) throws Exception {
-		this.redirectOutEntry = //
-				new AbstractMap.SimpleEntry<RedirectOperand, BasicPath>//
-				(//
-						redirectType == RedirectOutType.APPEND_FILE ? RedirectOperand.APPEND_OUT
-								: RedirectOperand.OVERRIDE_OUT, //
-						new BasicPath(filePath)//
-				);
+	public void addRedirection(Redirection redirection) {
+		this.redirectionMap.addRedirection(redirection);
 	}
 
 	@Override
-	public void redirectInFrom(String filePath) throws Exception {
-		this.redirectInEntry = //
-				new AbstractMap.SimpleEntry<RedirectOperand, BasicPath>//
-				(//
-						RedirectOperand.IN, new BasicPath(filePath)//
-				);
-	}
-
-	@Override
-	public String commandLine() throws Exception {
+	public String correspond() throws Exception {
 
 		for (String optCorrespond : optionsIgnored) {
 			options.remove(optCorrespond);
@@ -169,34 +171,32 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 				correspond += " " + commandOption.correspond();
 		}
 
-		String commandArgs = "";
-		for (ArgumentInterface argument : arguments) {
+		if (!arguments.isEmpty()) {
 
-			String commandArg = argument.correspond();
+			String commandArgs = "";
+			for (ArgumentInterface argument : arguments) {
 
-			/**
-			 * Specify two dashes (––) to separate the options from the non option
-			 * arguments; –– means that there are no more options. Thus, if you really have
-			 * a directory named –t, you could specify: ls –– –t to list the contents of
-			 * that directory.
-			 */
+				String commandArg = argument.correspond();
 
-			if (commandArg.startsWith("-") && !commandArgs.startsWith("--"))
-				commandArgs = "--" + commandArgs;
+				/**
+				 * Specify two dashes (––) to separate the options from the non option
+				 * arguments; –– means that there are no more options. Thus, if you really have
+				 * a directory named –t, you could specify: ls –– –t to list the contents of
+				 * that directory.
+				 */
 
-			commandArgs += " " + commandArg;
+				if (commandArg.startsWith("-") && !commandArgs.startsWith("--"))
+					commandArgs = "--" + commandArgs;
+
+				commandArgs += " " + commandArg;
+			}
+
+			correspond += " " + commandArgs.substring(1);
 		}
 
-		if (!commandArgs.equals(""))
-			correspond += " " + commandArgs.trim();
-
-		if (redirectInEntry != null)
-			correspond += " " + String.copyValueOf(redirectInEntry.getKey().symbol()) + " "
-					+ redirectInEntry.getValue().correspond();
-
-		if (redirectOutEntry != null)
-			correspond += " " + String.copyValueOf(redirectOutEntry.getKey().symbol()) + " "
-					+ redirectOutEntry.getValue().correspond();
+		String redirectCorr = redirectionMap.correspond();
+		if (!redirectCorr.equals(""))
+			correspond += " " + redirectCorr;
 
 		return correspond;
 	}

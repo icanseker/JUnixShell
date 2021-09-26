@@ -1,4 +1,4 @@
-package unix.shell.cmd.opt.mod;
+package unix.shell.cmd.mod;
 
 public interface ClassIdentifier {
 

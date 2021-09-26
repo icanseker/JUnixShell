@@ -76,7 +76,18 @@ public abstract class ShellExpansion implements ExpansionInterface {
 	}
 
 	@Override
+	public String correspond() throws Exception {
+		return "";
+	}
+
+	@Override
 	public String toString() {
-		return correspond();
+		try {
+			return correspond();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "";
 	}
 }

@@ -81,19 +81,19 @@ public enum ConcatenateOption implements UnixCommandOption<ConcatenateOption> {
 	;
 
 	private final Character symbol;
-	private final String varName;
+	private final String paramName;
 
-	private ConcatenateOption(Character symbol, String varName) {
+	private ConcatenateOption(Character symbol, String paramName) {
 		this.symbol = symbol;
-		this.varName = varName;
+		this.paramName = paramName;
 	}
 
 	private ConcatenateOption(Character symbol) {
 		this(symbol, null);
 	}
 
-	private ConcatenateOption(String varName) {
-		this(null, varName);
+	private ConcatenateOption(String paramName) {
+		this(null, paramName);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public enum ConcatenateOption implements UnixCommandOption<ConcatenateOption> {
 	}
 
 	@Override
-	public String varName() {
-		return this.varName;
+	public String paramName() {
+		return this.paramName;
 	}
 }

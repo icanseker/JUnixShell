@@ -26,7 +26,7 @@ public class CommandSubstitution extends ShellExpansion {
 	private String commandLine;
 
 	public CommandSubstitution(CommandLine commandLine) throws Exception {
-		this.commandLine = commandLine.commandLine();
+		this.commandLine = commandLine.correspond();
 	}
 
 	@Override

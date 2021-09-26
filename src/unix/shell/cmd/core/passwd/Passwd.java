@@ -11,9 +11,6 @@ import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
  * only change the password for their own account, while the superuser may
  * change the password for any account. passwd also changes the account or
  * associated password validity period.
- * 
- * @author icanseker@gmail.com
- *
  */
 public class Passwd extends UnixCommand<PasswdOption> {
 

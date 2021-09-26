@@ -26,9 +26,4 @@ package unix.shell.expansion;
  * https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion
  */
 public class FilenameExpansion extends ShellExpansion {
-
-	@Override
-	public String correspond() {
-		return null;
-	}
 }

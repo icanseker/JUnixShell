@@ -12,9 +12,6 @@ import unix.shell.cmd.param.Parameter;
  * 
  * An alias definition shall affect the current shell execution environment and
  * the execution environments of the subshells of the current shell.
- * 
- * @author icanseker@gmail.com
- *
  */
 public class Alias extends UnixCommand<None> {
 
@@ -29,17 +26,16 @@ public class Alias extends UnixCommand<None> {
 		return true;
 	}
 
+	/**
+	 * The first word of each simple command, if unquoted, is checked to see if it
+	 * has an alias. If so, that word is replaced by the text of the alias. The
+	 * alias name and the replacement text may contain any valid shell input,
+	 * including shell metacharacters, with the exception that the alias name may
+	 * not contain `='.
+	 * 
+	 * So, 'alias sample\ name ...' or 'alias "sample name" ...' do not work
+	 */
 	public void addAlias(String name, String definition) throws Exception {
-
-		/**
-		 * The first word of each simple command, if unquoted, is checked to see if it
-		 * has an alias. If so, that word is replaced by the text of the alias. The
-		 * alias name and the replacement text may contain any valid shell input,
-		 * including shell metacharacters, with the exception that the alias name may
-		 * not contain `='.
-		 * 
-		 * So, 'alias sample\ name ...' or 'alias "sample name" ...' do not work
-		 */
 
 		if (name.contains(" ") || name.contains("="))
 			throw new IllegalArgumentException("There must be no spaces or equality (=) characters in an alias name.");
@@ -49,16 +45,14 @@ public class Alias extends UnixCommand<None> {
 
 	public void addAlias(String name, UnixCommand<?> definition) throws Exception {
 
-		addArgument(new Parameter(name, new Text(definition.commandLine())));
+		addArgument(new Parameter(name, new Text(definition.correspond())));
 	}
 
+	/**
+	 * With no options, the alias command will return a list of all aliases in the
+	 * environment.
+	 */
 	public void all() {
-
-		/**
-		 * With no options, the alias command will return a list of all aliases in the
-		 * environment.
-		 */
-
 		resetOptions();
 		resetArguments();
 	}
