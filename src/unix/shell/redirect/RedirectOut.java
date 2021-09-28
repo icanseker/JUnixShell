@@ -22,12 +22,17 @@ public class RedirectOut implements UnixRedirection {
 	@Override
 	public String rdDescriptor() {
 
-		int descriptor = out.descriptor();
+		int descriptor = out.fileDescriptor();
 
 		/**
 		 * default descriptor of > / >> is 1 (stdout)
 		 */
 		return (descriptor == 1 ? "" : descriptor) + (overwriteDest() ? ">" : ">>");
+	}
+
+	@Override
+	public int IODescriptor() {
+		return out.fileDescriptor();
 	}
 
 	@Override

@@ -13,23 +13,31 @@ public class Example {
 
 		Date date = new Date();
 
-		date.declareRedirection(new RedirectIn(CommandIOFactory.STDIN, "in/source.file"));
+		date.declareRedirection(new RedirectIn(CommandIOFactory.STDIN, "in.file"));
 		date.print();
 
-		date.declareRedirection(new RedirectOut(CommandIOFactory.STDOUT, "out/dest.file", FileWrite.OVERWRITE));
+		date.declareRedirection(new RedirectOut(CommandIOFactory.STDOUT, "out.file", FileWrite.OVERWRITE));
 		date.print();
 
-		date.declareRedirection(new RedirectOut(CommandIOFactory.STDERR, "err/dest.file", FileWrite.APPEND));
+		// will override > out.file
+		date.declareRedirection(new RedirectOut(CommandIOFactory.STDOUT, "out2.file", FileWrite.APPEND));
 		date.print();
 
-		date.declareRedirection(
-				new RedirectOut(CommandIOFactory.DECLARE.out(5), "out/custom5.file", FileWrite.OVERWRITE));
+		date.declareRedirection(new RedirectOut(CommandIOFactory.STDERR, "err.file", FileWrite.OVERWRITE));
+		date.print();
+
+		date.declareRedirection(new RedirectOut(CommandIOFactory.DECLARE.out(5), "out5.file", FileWrite.OVERWRITE));
 		date.print();
 
 		date.declareRedirection(new TransferOut(CommandIOFactory.STDOUT, CommandIOFactory.STDERR));
 		date.print();
 
-		date.declareRedirection(new TransferOut(CommandIOFactory.STDOUT, CommandIOFactory.DECLARE.out(5)));
+		// will override 1>&2
+		date.declareRedirection(new TransferOut(CommandIOFactory.STDOUT, CommandIOFactory.DECLARE.out(7)));
+		date.print();
+
+		// will redirect both stdout and stderr to destination
+		date.redirectStdOutAndStdErr("both.file", FileWrite.APPEND);
 		date.print();
 	}
 }

@@ -15,12 +15,17 @@ public class RedirectIn implements UnixRedirection {
 	@Override
 	public String rdDescriptor() {
 
-		int descriptor = in.descriptor();
+		int descriptor = in.fileDescriptor();
 
 		/**
 		 * default descriptor of < is 0 (stdin)
 		 */
 		return (descriptor == 0 ? "" : descriptor) + "<";
+	}
+
+	@Override
+	public int IODescriptor() {
+		return in.fileDescriptor();
 	}
 
 	@Override

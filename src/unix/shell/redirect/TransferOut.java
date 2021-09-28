@@ -14,11 +14,16 @@ public class TransferOut implements UnixRedirection {
 
 	@Override
 	public String rdDescriptor() {
-		return source.descriptor() + ">&";
+		return source.fileDescriptor() + ">&";
+	}
+
+	@Override
+	public int IODescriptor() {
+		return source.fileDescriptor();
 	}
 
 	@Override
 	public String correspond() throws Exception {
-		return rdDescriptor() + destination.descriptor();
+		return rdDescriptor() + destination.fileDescriptor();
 	}
 }

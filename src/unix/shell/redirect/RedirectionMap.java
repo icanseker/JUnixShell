@@ -3,6 +3,7 @@ package unix.shell.redirect;
 import java.util.LinkedHashMap;
 
 import unix.shell.cmd.mod.StrCorrespond;
+import unix.shell.io.FileWrite;
 import unix.shell.redirect.mod.RDMapping;
 
 /**
@@ -48,8 +49,41 @@ public class RedirectionMap implements RDMapping, StrCorrespond {
 
 	@Override
 	public void declareRedirection(UnixRedirection redirection) {
-		rdMap.remove(redirection.rdDescriptor());
-		rdMap.put(redirection.rdDescriptor(), redirection);
+
+		String rId = determineRId(redirection);
+
+		if (rId != null) {
+			rdMap.remove(rId); // ! the order of redirections is significant
+			rdMap.put(rId, redirection);
+		}
+	}
+
+	/**
+	 * This construct allows both the standard output (file descriptor 1) and the
+	 * standard error output (file descriptor 2) to be redirected/appended to the
+	 * file whose name is the expansion of word.
+	 */
+	@Override
+	public void redirectStdOutAndStdErr(String destination, FileWrite writeType) {
+
+		UnixRedirection rStdOutErr = new UnixRedirection() {
+			@Override
+			public String correspond() throws Exception {
+				return rdDescriptor() + " " + destination;
+			}
+
+			@Override
+			public String rdDescriptor() {
+				return writeType == FileWrite.OVERWRITE ? "&>" : "&>>";
+			}
+
+			@Override
+			public int IODescriptor() {
+				return 12;
+			}
+		};
+
+		declareRedirection(rStdOutErr);
 	}
 
 	@Override
@@ -64,5 +98,19 @@ public class RedirectionMap implements RDMapping, StrCorrespond {
 			return correspond.substring(1);
 
 		return correspond;
+	}
+
+	private static String determineRId(UnixRedirection redirection) {
+
+		if (redirection instanceof RedirectIn || redirection instanceof TransferOut)
+			return redirection.rdDescriptor();
+
+		else if (redirection instanceof RedirectOut)
+			return redirection.IODescriptor() + ">";
+
+		else if (redirection.IODescriptor() == 12) // redirectStdOutAndStdErr
+			return "12";
+
+		return null;
 	}
 }

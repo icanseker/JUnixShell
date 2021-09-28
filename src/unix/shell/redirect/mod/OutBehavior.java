@@ -1,4 +1,4 @@
-package unix.shell.cmd.io.mod;
+package unix.shell.redirect.mod;
 
 public interface OutBehavior {
 	public boolean overwriteDest();

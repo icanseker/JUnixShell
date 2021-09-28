@@ -7,36 +7,36 @@ public class CommandIOFactory {
 
 	public static CommandIn STDIN = new CommandIn() {
 		@Override
-		public int descriptor() {
+		public int fileDescriptor() {
 			return 0;
 		}
 
 		@Override
-		public String fileDescriptor() {
+		public String file() {
 			return "/dev/stdin";
 		};
 	};
 
 	public static CommandOut STDOUT = new CommandOut() {
 		@Override
-		public int descriptor() {
+		public int fileDescriptor() {
 			return 1;
 		}
 
 		@Override
-		public String fileDescriptor() {
+		public String file() {
 			return "/dev/stdout";
 		}
 	};
 
 	public static CommandOut STDERR = new CommandOut() {
 		@Override
-		public int descriptor() {
+		public int fileDescriptor() {
 			return 2;
 		}
 
 		@Override
-		public String fileDescriptor() {
+		public String file() {
 			return "/dev/stderr";
 		};
 	};
@@ -49,12 +49,12 @@ public class CommandIOFactory {
 	public CommandIn in(int descriptor, String fileDescriptor) {
 		return new CommandIn() {
 			@Override
-			public int descriptor() {
+			public int fileDescriptor() {
 				return descriptor;
 			}
 
 			@Override
-			public String fileDescriptor() {
+			public String file() {
 				return fileDescriptor;
 			}
 		};
@@ -67,12 +67,12 @@ public class CommandIOFactory {
 	public CommandOut out(int descriptor, String fileDescriptor) {
 		return new CommandOut() {
 			@Override
-			public int descriptor() {
+			public int fileDescriptor() {
 				return descriptor;
 			}
 
 			@Override
-			public String fileDescriptor() {
+			public String file() {
 				return fileDescriptor;
 			}
 		};

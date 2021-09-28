@@ -15,6 +15,7 @@ import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
 import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.mod.CommandLine;
 import unix.shell.cmd.opt.UnixCommandOption;
+import unix.shell.io.FileWrite;
 import unix.shell.redirect.RedirectionMap;
 import unix.shell.redirect.UnixRedirection;
 
@@ -144,6 +145,11 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	@Override
 	public void declareRedirection(UnixRedirection redirection) {
 		this.redirectionMap.declareRedirection(redirection);
+	}
+
+	@Override
+	public void redirectStdOutAndStdErr(String destination, FileWrite writeType) {
+		this.redirectionMap.redirectStdOutAndStdErr(destination, writeType);
 	}
 
 	@Override

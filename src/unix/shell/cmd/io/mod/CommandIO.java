@@ -2,9 +2,9 @@ package unix.shell.cmd.io.mod;
 
 public interface CommandIO {
 
-	public int descriptor();
+	public int fileDescriptor();
 
-	public default String fileDescriptor() {
+	public default String file() {
 		return null;
 	}
 }
