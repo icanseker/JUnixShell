@@ -1,5 +1,6 @@
 package unix.shell.cmd.io;
 
+import unix.shell.cmd.arg.type.FilePath;
 import unix.shell.cmd.io.mod.CommandIn;
 import unix.shell.cmd.io.mod.CommandOut;
 
@@ -7,36 +8,36 @@ public class CommandIOFactory {
 
 	public static CommandIn STDIN = new CommandIn() {
 		@Override
-		public int fileDescriptor() {
+		public int fd() {
 			return 0;
 		}
 
 		@Override
-		public String file() {
+		public String ioSource() {
 			return "/dev/stdin";
 		};
 	};
 
 	public static CommandOut STDOUT = new CommandOut() {
 		@Override
-		public int fileDescriptor() {
+		public int fd() {
 			return 1;
 		}
 
 		@Override
-		public String file() {
+		public String ioSource() {
 			return "/dev/stdout";
 		}
 	};
 
 	public static CommandOut STDERR = new CommandOut() {
 		@Override
-		public int fileDescriptor() {
+		public int fd() {
 			return 2;
 		}
 
 		@Override
-		public String file() {
+		public String ioSource() {
 			return "/dev/stderr";
 		};
 	};
@@ -46,39 +47,39 @@ public class CommandIOFactory {
 	private CommandIOFactory() {
 	}
 
-	public CommandIn in(int descriptor, String fileDescriptor) {
+	public CommandIn in(int fileDescriptor, String ioSource) {
 		return new CommandIn() {
 			@Override
-			public int fileDescriptor() {
-				return descriptor;
+			public int fd() {
+				return fileDescriptor;
 			}
 
 			@Override
-			public String file() {
-				return fileDescriptor;
+			public String ioSource() throws Exception {
+				return new FilePath(ioSource).toString();
 			}
 		};
 	}
 
-	public CommandIn in(int descriptor) {
-		return in(descriptor, null);
+	public CommandIn in(int fileDescriptor) {
+		return in(fileDescriptor, null);
 	}
 
-	public CommandOut out(int descriptor, String fileDescriptor) {
+	public CommandOut out(int fileDescriptor, String ioSource) {
 		return new CommandOut() {
 			@Override
-			public int fileDescriptor() {
-				return descriptor;
+			public int fd() {
+				return fileDescriptor;
 			}
 
 			@Override
-			public String file() {
-				return fileDescriptor;
+			public String ioSource() throws Exception {
+				return new FilePath(ioSource).toString();
 			}
 		};
 	}
 
-	public CommandOut out(int descriptor) {
-		return out(descriptor, null);
+	public CommandOut out(int fileDescriptor) {
+		return out(fileDescriptor, null);
 	}
 }

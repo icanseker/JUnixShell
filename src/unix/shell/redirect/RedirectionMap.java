@@ -2,9 +2,9 @@ package unix.shell.redirect;
 
 import java.util.LinkedHashMap;
 
+import unix.shell.cmd.arg.type.FilePath;
 import unix.shell.cmd.mod.StrCorrespond;
-import unix.shell.io.FileWrite;
-import unix.shell.redirect.mod.RDMapping;
+import unix.shell.redirect.mod.IOMapping;
 
 /**
  * Before a command is executed, its input and output may be redirected using a
@@ -36,7 +36,7 @@ import unix.shell.redirect.mod.RDMapping;
  * because the standard error was made a copy of the standard output before the
  * standard output was redirected to dirlist.
  */
-public class RedirectionMap implements RDMapping, StrCorrespond {
+public class RedirectionMap implements IOMapping, StrCorrespond {
 
 	/**
 	 * Held redirections as mapped by redirection rdDescriptor
@@ -50,40 +50,76 @@ public class RedirectionMap implements RDMapping, StrCorrespond {
 	@Override
 	public void declareRedirection(UnixRedirection redirection) {
 
-		String rId = determineRId(redirection);
+		String rId = redirection.rdDescriptor();
 
 		if (rId != null) {
+
+			if (redirection instanceof RedirectOutErr) {
+				rdMap.remove(">");
+				rdMap.remove("1>");
+				rdMap.remove("2>");
+			}
+
+			else if (redirection.rdDescriptor().endsWith("<>")) // openFile2ReadWrite
+				rdMap.remove(redirection.IODescriptor() + ">");
+
 			rdMap.remove(rId); // ! the order of redirections is significant
 			rdMap.put(rId, redirection);
 		}
 	}
 
 	/**
-	 * This construct allows both the standard output (file descriptor 1) and the
-	 * standard error output (file descriptor 2) to be redirected/appended to the
-	 * file whose name is the expansion of word.
+	 * The redirection operator
+	 * 
+	 * <b>[n]<>word</b>
+	 * 
+	 * causes the file whose name is the expansion of word to be opened for both
+	 * reading and writing on file descriptor n, or on file descriptor 0 if n is not
+	 * specified. If the file does not exist, it is created.
 	 */
 	@Override
-	public void redirectStdOutAndStdErr(String destination, FileWrite writeType) {
+	public void openFile2ReadWrite(int fileDescriptor, String filePath) {
 
-		UnixRedirection rStdOutErr = new UnixRedirection() {
+		UnixRedirection rOpen = new UnixRedirection() {
 			@Override
 			public String correspond() throws Exception {
-				return rdDescriptor() + " " + destination;
+				return rdDescriptor() + " " + new FilePath(filePath);
 			}
 
 			@Override
 			public String rdDescriptor() {
-				return writeType == FileWrite.OVERWRITE ? "&>" : "&>>";
+				return fileDescriptor + "<>";
 			}
 
 			@Override
 			public int IODescriptor() {
-				return 12;
+				return fileDescriptor;
 			}
 		};
 
-		declareRedirection(rStdOutErr);
+		declareRedirection(rOpen);
+	}
+
+	/**
+	 * The redirection operator
+	 * 
+	 * [n]<&digit-
+	 * 
+	 * moves the file descriptor digit to file descriptor n, or the standard input
+	 * (file descriptor 0) if n is not specified. digit is closed after being
+	 * duplicated to n.
+	 * 
+	 * <p/>
+	 * Similarly, the redirection operator
+	 * 
+	 * [n]>&digit-
+	 * 
+	 * moves the file descriptor digit to file descriptor n, or the standard output
+	 * (file descriptor 1) if n is not specified.
+	 */
+	@Override
+	public void moveFileDescriptor() {
+
 	}
 
 	@Override
@@ -98,19 +134,5 @@ public class RedirectionMap implements RDMapping, StrCorrespond {
 			return correspond.substring(1);
 
 		return correspond;
-	}
-
-	private static String determineRId(UnixRedirection redirection) {
-
-		if (redirection instanceof RedirectIn || redirection instanceof TransferOut)
-			return redirection.rdDescriptor();
-
-		else if (redirection instanceof RedirectOut)
-			return redirection.IODescriptor() + ">";
-
-		else if (redirection.IODescriptor() == 12) // redirectStdOutAndStdErr
-			return "12";
-
-		return null;
 	}
 }

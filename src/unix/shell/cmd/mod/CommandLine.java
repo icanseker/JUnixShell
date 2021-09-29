@@ -1,9 +1,9 @@
 package unix.shell.cmd.mod;
 
 import unix.shell.expansion.CommandSubstitution;
-import unix.shell.redirect.mod.RDMapping;
+import unix.shell.redirect.mod.IOMapping;
 
-public interface CommandLine extends StrCorrespond, RDMapping {
+public interface CommandLine extends StrCorrespond, IOMapping {
 
 	public default String exitStatus() throws Exception {
 		return correspond() + " >&/dev/null; echo $?";

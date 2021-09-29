@@ -28,4 +28,9 @@ public abstract class Argument implements ArgumentInterface {
 	public boolean formValidator(String correspond) throws Exception {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return correspond();
+	}
 }
