@@ -1,10 +1,10 @@
-package unix.shell.redirect;
+package unix.shell.cmd.io.redirect;
 
 import java.util.LinkedHashMap;
 
 import unix.shell.cmd.arg.type.FilePath;
+import unix.shell.cmd.io.redirect.mod.IOMapping;
 import unix.shell.cmd.mod.StrCorrespond;
-import unix.shell.redirect.mod.IOMapping;
 
 /**
  * Before a command is executed, its input and output may be redirected using a

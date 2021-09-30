@@ -12,16 +12,16 @@ import unix.shell.cmd.arg.mod.ArgumentBehavior;
 import unix.shell.cmd.arg.mod.ArgumentInterface;
 import unix.shell.cmd.exitstat.StandardUnixExitStatus;
 import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
+import unix.shell.cmd.io.redirect.RedirectionMap;
+import unix.shell.cmd.io.redirect.UnixRedirection;
 import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.mod.CommandLine;
 import unix.shell.cmd.opt.UnixCommandOption;
-import unix.shell.redirect.RedirectionMap;
-import unix.shell.redirect.UnixRedirection;
 
 public abstract class UnixCommand<CommandOption extends UnixCommandOption<CommandOption>>
 		implements ClassIdentifier, ArgumentBehavior, CommandLine {
 
-	private String name;
+	private String identifier;
 
 	/**
 	 * Each command has an exit status-reason map, this will be Standard Exit status
@@ -62,9 +62,9 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	 */
 	private RedirectionMap redirectionMap;
 
-	public UnixCommand(String name) {
+	public UnixCommand(String identifier) {
 
-		this.name = name;
+		this.identifier = identifier;
 		this.arguments = new LinkedHashSet<ArgumentInterface>();
 
 		this.options = new LinkedHashMap<String, UnixCommandOption<CommandOption>>();
@@ -154,7 +154,6 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	@Override
 	public void moveFileDescriptor() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -165,7 +164,7 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 			optionArguments.remove(optCorrespond);
 		}
 
-		String correspond = this.name;
+		String correspond = this.identifier;
 
 		for (Map.Entry<String, UnixCommandOption<CommandOption>> optionEntry : options.entrySet()) {
 

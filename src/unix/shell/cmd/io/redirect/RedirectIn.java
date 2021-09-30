@@ -1,4 +1,4 @@
-package unix.shell.redirect;
+package unix.shell.cmd.io.redirect;
 
 import unix.shell.cmd.arg.type.FilePath;
 import unix.shell.cmd.io.mod.CommandIn;

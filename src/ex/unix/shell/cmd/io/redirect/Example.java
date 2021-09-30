@@ -1,18 +1,19 @@
-package ex.unix.shell.redirect;
+package ex.unix.shell.cmd.io.redirect;
 
-import unix.shell.cmd.UCPrototype;
+import unix.shell.cmd.SimpleCommand;
 import unix.shell.cmd.io.CommandIOFactory;
+import unix.shell.cmd.io.redirect.CloseIO;
+import unix.shell.cmd.io.redirect.RedirectIn;
+import unix.shell.cmd.io.redirect.RedirectOut;
+import unix.shell.cmd.io.redirect.RedirectOutErr;
 import unix.shell.io.FileWrite;
-import unix.shell.redirect.CloseIO;
-import unix.shell.redirect.RedirectIn;
-import unix.shell.redirect.RedirectOut;
-import unix.shell.redirect.RedirectOutErr;
 
 public class Example {
 
 	public static void main(String[] args) throws Exception {
 
-		UCPrototype command = new UCPrototype();
+		SimpleCommand command = new SimpleCommand("cmd") {
+		};
 
 		/*
 		 * redirect standard input from a source

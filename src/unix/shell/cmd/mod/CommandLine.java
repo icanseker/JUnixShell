@@ -1,7 +1,7 @@
 package unix.shell.cmd.mod;
 
+import unix.shell.cmd.io.redirect.mod.IOMapping;
 import unix.shell.expansion.CommandSubstitution;
-import unix.shell.redirect.mod.IOMapping;
 
 public interface CommandLine extends StrCorrespond, IOMapping {
 
@@ -11,9 +11,5 @@ public interface CommandLine extends StrCorrespond, IOMapping {
 
 	public default String substitution() throws Exception {
 		return "" + new CommandSubstitution(this);
-	}
-
-	public default void print() throws Exception {
-		System.out.println(correspond());
 	}
 }

@@ -1,4 +1,4 @@
-package unix.shell.redirect;
+package unix.shell.cmd.io.redirect;
 
 import unix.shell.cmd.mod.StrCorrespond;
 

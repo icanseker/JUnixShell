@@ -1,9 +1,9 @@
-package unix.shell.redirect;
+package unix.shell.cmd.io.redirect;
 
 import unix.shell.cmd.arg.type.FilePath;
 import unix.shell.cmd.io.mod.CommandOut;
+import unix.shell.cmd.io.redirect.mod.SafeRedirection;
 import unix.shell.io.FileWrite;
-import unix.shell.redirect.mod.SafeRedirection;
 
 /**
  * Redirection of output causes the file whose name results from the expansion

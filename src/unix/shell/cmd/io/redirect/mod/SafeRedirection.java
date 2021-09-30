@@ -1,6 +1,6 @@
-package unix.shell.redirect.mod;
+package unix.shell.cmd.io.redirect.mod;
 
-import unix.shell.redirect.UnixRedirection;
+import unix.shell.cmd.io.redirect.UnixRedirection;
 
 /**
  * If the redirection operator is ‘>’, and the noclobber option to the set

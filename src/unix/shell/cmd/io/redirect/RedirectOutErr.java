@@ -1,8 +1,8 @@
-package unix.shell.redirect;
+package unix.shell.cmd.io.redirect;
 
 import unix.shell.cmd.arg.type.FilePath;
+import unix.shell.cmd.io.redirect.mod.SafeRedirection;
 import unix.shell.io.FileWrite;
-import unix.shell.redirect.mod.SafeRedirection;
 
 /**
  * This construct allows both the standard output (file descriptor 1) and the

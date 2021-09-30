@@ -1,13 +1,13 @@
-package unix.shell.redirect.mod;
+package unix.shell.cmd.io.redirect.mod;
 
 import unix.shell.cmd.io.mod.CommandIO;
 import unix.shell.cmd.io.mod.CommandIn;
 import unix.shell.cmd.io.mod.CommandOut;
+import unix.shell.cmd.io.redirect.RedirectIn;
+import unix.shell.cmd.io.redirect.RedirectOut;
+import unix.shell.cmd.io.redirect.TransferIO;
+import unix.shell.cmd.io.redirect.UnixRedirection;
 import unix.shell.io.FileWrite;
-import unix.shell.redirect.RedirectIn;
-import unix.shell.redirect.RedirectOut;
-import unix.shell.redirect.TransferIO;
-import unix.shell.redirect.UnixRedirection;
 
 public interface IOMapping {
 
