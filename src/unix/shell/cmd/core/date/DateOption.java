@@ -3,9 +3,9 @@ package unix.shell.cmd.core.date;
 import java.util.EnumSet;
 import java.util.HashSet;
 
-import unix.shell.cmd.opt.UnixCommandOption;
+import unix.shell.cmd.opt.CommandLineOption;
 
-public enum DateOption implements UnixCommandOption<DateOption> {
+public enum DateOption implements CommandLineOption<DateOption> {
 
 	/**
 	 * Set the date and time to datestr.
@@ -23,8 +23,8 @@ public enum DateOption implements UnixCommandOption<DateOption> {
 		}
 
 		@Override
-		public HashSet<UnixCommandOption<DateOption>> optionsEqualed() {
-			return new HashSet<UnixCommandOption<DateOption>>(EnumSet.allOf(DateSpec.class));
+		public HashSet<CommandLineOption<DateOption>> optionsEqualed() {
+			return new HashSet<CommandLineOption<DateOption>>(EnumSet.allOf(DateSpec.class));
 		}
 	},
 

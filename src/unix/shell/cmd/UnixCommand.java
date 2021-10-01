@@ -16,9 +16,9 @@ import unix.shell.cmd.io.redirect.RedirectionMap;
 import unix.shell.cmd.io.redirect.UnixRedirection;
 import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.mod.CommandLine;
-import unix.shell.cmd.opt.UnixCommandOption;
+import unix.shell.cmd.opt.CommandLineOption;
 
-public abstract class UnixCommand<CommandOption extends UnixCommandOption<CommandOption>>
+public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionForm>>
 		implements ClassIdentifier, ArgumentBehavior, CommandLine {
 
 	private String identifier;
@@ -41,7 +41,7 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	/**
 	 * Holds options of command, mapped by option (unique) id
 	 */
-	private LinkedHashMap<String, UnixCommandOption<CommandOption>> options;
+	private LinkedHashMap<String, CommandLineOption<OptionForm>> options;
 
 	/**
 	 * Holds arguments of option, mapped by option (unique) id
@@ -67,14 +67,14 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 		this.identifier = identifier;
 		this.arguments = new LinkedHashSet<ArgumentInterface>();
 
-		this.options = new LinkedHashMap<String, UnixCommandOption<CommandOption>>();
+		this.options = new LinkedHashMap<String, CommandLineOption<OptionForm>>();
 		this.optionArguments = new HashMap<String, Set<ArgumentInterface>>();
 		this.optionsIgnored = new HashSet<String>();
 
 		this.redirectionMap = new RedirectionMap();
 	}
 
-	protected void addOption(UnixCommandOption<CommandOption> option, ArgumentInterface... arguments) throws Exception {
+	protected void addOption(CommandLineOption<OptionForm> option, ArgumentInterface... arguments) throws Exception {
 
 		String optIdentifier = option.identifier();
 
@@ -92,11 +92,11 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 		} else
 			optionArguments.remove(optIdentifier);
 
-		HashSet<UnixCommandOption<CommandOption>> optionsRelated = null;
+		HashSet<CommandLineOption<OptionForm>> optionsRelated = null;
 
 		optionsRelated = option.optionsExcluded();
 		if (optionsRelated != null)
-			for (UnixCommandOption<?> optionExcluded : optionsRelated) {
+			for (CommandLineOption<?> optionExcluded : optionsRelated) {
 
 				options.remove(optionExcluded.identifier());
 				optionArguments.remove(optionExcluded.identifier());
@@ -104,17 +104,17 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 
 		optionsRelated = option.optionsOverridden();
 		if (optionsRelated != null)
-			for (UnixCommandOption<?> optionOverridden : optionsRelated)
+			for (CommandLineOption<?> optionOverridden : optionsRelated)
 				optionsIgnored.add(optionOverridden.identifier());
 
 		optionsRelated = option.optionsEqualed();
 		if (optionsRelated != null)
-			for (UnixCommandOption<?> optionEqualed : optionsRelated)
+			for (CommandLineOption<?> optionEqualed : optionsRelated)
 				optionsIgnored.add(optionEqualed.identifier());
 
 		optionsRelated = option.optionsRequired();
 		if (optionsRelated != null)
-			for (UnixCommandOption<CommandOption> optionRequired : optionsRelated)
+			for (CommandLineOption<OptionForm> optionRequired : optionsRelated)
 				addOption(optionRequired);
 
 		optionsRelated = null;
@@ -152,11 +152,6 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 	}
 
 	@Override
-	public void moveFileDescriptor() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public String correspond() throws Exception {
 
 		for (String optCorrespond : optionsIgnored) {
@@ -166,9 +161,9 @@ public abstract class UnixCommand<CommandOption extends UnixCommandOption<Comman
 
 		String correspond = this.identifier;
 
-		for (Map.Entry<String, UnixCommandOption<CommandOption>> optionEntry : options.entrySet()) {
+		for (Map.Entry<String, CommandLineOption<OptionForm>> optionEntry : options.entrySet()) {
 
-			UnixCommandOption<CommandOption> commandOption = optionEntry.getValue();
+			CommandLineOption<OptionForm> commandOption = optionEntry.getValue();
 			String optionId = optionEntry.getKey();
 
 			Set<ArgumentInterface> optionArgs = this.optionArguments.get(optionId);

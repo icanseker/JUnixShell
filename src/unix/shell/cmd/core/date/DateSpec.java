@@ -1,13 +1,12 @@
 package unix.shell.cmd.core.date;
 
-import unix.shell.cmd.opt.UnixCommandOption;
-import unix.shell.cmd.opt.mod.SingularOption;
+import unix.shell.cmd.opt.SingularOption;
 
 /**
  * Specify datestr: string, source-file, file modification date etc.
  *
  */
-public enum DateSpec implements UnixCommandOption<DateOption>, SingularOption {
+public enum DateSpec implements SingularOption<DateOption> {
 
 	/**
 	 * Display the date and time specified in datestr instead of the current date

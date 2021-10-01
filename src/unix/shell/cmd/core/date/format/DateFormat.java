@@ -2,10 +2,9 @@ package unix.shell.cmd.core.date.format;
 
 import unix.shell.cmd.arg.mod.ArgumentInterface;
 import unix.shell.cmd.core.date.DateOption;
-import unix.shell.cmd.opt.UnixCommandOption;
-import unix.shell.cmd.opt.mod.SingularOption;
+import unix.shell.cmd.opt.SingularOption;
 
-public enum DateFormat implements UnixCommandOption<DateOption>, SingularOption {
+public enum DateFormat implements SingularOption<DateOption> {
 
 	/**
 	 * Display the date using an ISO 8601 format, ‘%Y-%m-%d’.

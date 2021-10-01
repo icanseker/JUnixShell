@@ -30,6 +30,4 @@ public interface IOMapping {
 	public void declareRedirection(UnixRedirection redirection);
 
 	public void openFile2ReadWrite(int fileDescriptor, String ioSource);
-
-	public void moveFileDescriptor();
 }

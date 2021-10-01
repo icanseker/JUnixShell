@@ -3,17 +3,17 @@ package unix.shell.cmd.core.passwd;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import unix.shell.cmd.opt.UnixCommandOption;
+import unix.shell.cmd.opt.CommandLineOption;
 
-public enum PasswdOption implements UnixCommandOption<PasswdOption> {
+public enum PasswdOption implements CommandLineOption<PasswdOption> {
 
 	/**
 	 * This option can be used only with -S and causes show status for all users.
 	 */
 	SHOW_STATUS_FOR_ALL_USERS('a', "all") {
 		@Override
-		public HashSet<UnixCommandOption<PasswdOption>> optionsRequired() {
-			return new HashSet<UnixCommandOption<PasswdOption>>(Arrays.asList(DISPLAY_ACCOUNT_STATUS_INFO));
+		public HashSet<CommandLineOption<PasswdOption>> optionsRequired() {
+			return new HashSet<CommandLineOption<PasswdOption>>(Arrays.asList(DISPLAY_ACCOUNT_STATUS_INFO));
 		}
 	},
 

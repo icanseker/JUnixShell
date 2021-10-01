@@ -100,28 +100,6 @@ public class RedirectionMap implements IOMapping, StrCorrespond {
 		declareRedirection(rOpen);
 	}
 
-	/**
-	 * The redirection operator
-	 * 
-	 * [n]<&digit-
-	 * 
-	 * moves the file descriptor digit to file descriptor n, or the standard input
-	 * (file descriptor 0) if n is not specified. digit is closed after being
-	 * duplicated to n.
-	 * 
-	 * <p/>
-	 * Similarly, the redirection operator
-	 * 
-	 * [n]>&digit-
-	 * 
-	 * moves the file descriptor digit to file descriptor n, or the standard output
-	 * (file descriptor 1) if n is not specified.
-	 */
-	@Override
-	public void moveFileDescriptor() {
-
-	}
-
 	@Override
 	public String correspond() throws Exception {
 

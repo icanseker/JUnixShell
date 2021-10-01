@@ -3,17 +3,17 @@ package unix.shell.cmd.core.cat;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import unix.shell.cmd.opt.UnixCommandOption;
+import unix.shell.cmd.opt.CommandLineOption;
 
-public enum ConcatenateOption implements UnixCommandOption<ConcatenateOption> {
+public enum ConcatenateOption implements CommandLineOption<ConcatenateOption> {
 
 	/**
 	 * equivalent to -vET (--show-nonprinting --show-ends --show-tabs)
 	 */
 	SHOW_ALL_CHARACTERS('A', "show-all") {
 		@Override
-		public HashSet<UnixCommandOption<ConcatenateOption>> optionsEqualed() {
-			return new HashSet<UnixCommandOption<ConcatenateOption>>(Arrays.asList( //
+		public HashSet<CommandLineOption<ConcatenateOption>> optionsEqualed() {
+			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList( //
 					SHOW_NONPRINTING, //
 					SHOW_LINE_BREAK, //
 					SHOW_TABS, //
@@ -29,8 +29,8 @@ public enum ConcatenateOption implements UnixCommandOption<ConcatenateOption> {
 	NUMBER_NONEMPTY_LINES('b', "number-nonblank") {
 
 		@Override
-		public HashSet<UnixCommandOption<ConcatenateOption>> optionsOverridden() {
-			return new HashSet<UnixCommandOption<ConcatenateOption>>(Arrays.asList(NUMBER_ALL_LINES));
+		public HashSet<CommandLineOption<ConcatenateOption>> optionsOverridden() {
+			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(NUMBER_ALL_LINES));
 		}
 	},
 
@@ -39,8 +39,8 @@ public enum ConcatenateOption implements UnixCommandOption<ConcatenateOption> {
 	 */
 	SHOW_NONPRINTING_AND_LINE_BREAK('e') {
 		@Override
-		public HashSet<UnixCommandOption<ConcatenateOption>> optionsEqualed() {
-			return new HashSet<UnixCommandOption<ConcatenateOption>>(Arrays.asList(SHOW_NONPRINTING, SHOW_LINE_BREAK));
+		public HashSet<CommandLineOption<ConcatenateOption>> optionsEqualed() {
+			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(SHOW_NONPRINTING, SHOW_LINE_BREAK));
 		}
 	},
 
@@ -64,8 +64,8 @@ public enum ConcatenateOption implements UnixCommandOption<ConcatenateOption> {
 	 */
 	SHOW_NONPRINTING_AND_TABS('t') {
 		@Override
-		public HashSet<UnixCommandOption<ConcatenateOption>> optionsEqualed() {
-			return new HashSet<UnixCommandOption<ConcatenateOption>>(Arrays.asList(SHOW_NONPRINTING, SHOW_TABS));
+		public HashSet<CommandLineOption<ConcatenateOption>> optionsEqualed() {
+			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(SHOW_NONPRINTING, SHOW_TABS));
 		}
 	},
 

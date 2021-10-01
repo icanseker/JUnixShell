@@ -1,8 +1,8 @@
 package unix.shell.cmd.bash.builtin.unalias;
 
-import unix.shell.cmd.opt.UnixCommandOption;
+import unix.shell.cmd.opt.CommandLineOption;
 
-public enum UnaliasOption implements UnixCommandOption<UnaliasOption> {
+public enum UnaliasOption implements CommandLineOption<UnaliasOption> {
 
 	/**
 	 * Remove all alias definitions from the current shell execution environment.
