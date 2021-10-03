@@ -6,6 +6,7 @@ import unix.shell.cmd.io.redirect.CloseIO;
 import unix.shell.cmd.io.redirect.RedirectIn;
 import unix.shell.cmd.io.redirect.RedirectOut;
 import unix.shell.cmd.io.redirect.RedirectOutErr;
+import unix.shell.cmd.outline.FieldMap;
 import unix.shell.io.FileWrite;
 
 public class Example {
@@ -13,6 +14,11 @@ public class Example {
 	public static void main(String[] args) throws Exception {
 
 		SimpleCommand command = new SimpleCommand("cmd") {
+
+			@Override
+			protected FieldMap synopsis() {
+				return null;
+			}
 		};
 
 		/*

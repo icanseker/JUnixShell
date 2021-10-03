@@ -29,6 +29,17 @@ public abstract class Argument implements ArgumentInterface {
 		return true;
 	}
 
+	public static Argument[] setOf(String... arguments) throws Exception {
+
+		Argument[] set = new Argument[arguments.length];
+
+		for (int i = 0; i < arguments.length; i++)
+			set[i] = new Argument(arguments[i]) {
+			};
+
+		return set;
+	}
+
 	@Override
 	public String toString() {
 		return correspond();

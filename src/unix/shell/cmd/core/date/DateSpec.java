@@ -27,7 +27,7 @@ public enum DateSpec implements SingularOption<DateOption> {
 	 */
 	CUSTOM('d', "date") {
 		@Override
-		public boolean requiresArgument() {
+		public boolean requireArgument() {
 			return true;
 		}
 	},
@@ -40,7 +40,7 @@ public enum DateSpec implements SingularOption<DateOption> {
 	 */
 	SOURCE_FILE('f', "file") {
 		@Override
-		public boolean requiresArgument() {
+		public boolean requireArgument() {
 			return true;
 		}
 	},
@@ -51,7 +51,7 @@ public enum DateSpec implements SingularOption<DateOption> {
 	 */
 	REFERENCE_FILE('r', "reference") {
 		@Override
-		public boolean requiresArgument() {
+		public boolean requireArgument() {
 			return true;
 		}
 	},

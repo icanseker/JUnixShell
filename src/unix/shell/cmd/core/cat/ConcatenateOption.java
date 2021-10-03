@@ -15,9 +15,9 @@ public enum ConcatenateOption implements CommandLineOption<ConcatenateOption> {
 		public HashSet<CommandLineOption<ConcatenateOption>> optionsEqualed() {
 			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList( //
 					SHOW_NONPRINTING, //
-					SHOW_LINE_BREAK, //
+					SHOW_ENDS, //
 					SHOW_TABS, //
-					SHOW_NONPRINTING_AND_LINE_BREAK, //
+					SHOW_NONPRINTING_AND_ENDS, //
 					SHOW_NONPRINTING_AND_TABS //
 			));
 		}
@@ -26,38 +26,38 @@ public enum ConcatenateOption implements CommandLineOption<ConcatenateOption> {
 	/**
 	 * number nonempty output lines, overrides -n (--number NUMBER_ALL_LINES)
 	 */
-	NUMBER_NONEMPTY_LINES('b', "number-nonblank") {
+	NUMBER_NONBLANK('b', "number-nonblank") {
 
 		@Override
 		public HashSet<CommandLineOption<ConcatenateOption>> optionsOverridden() {
-			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(NUMBER_ALL_LINES));
+			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(NUMBER));
 		}
 	},
 
 	/**
 	 * equivalent to -vE (--show-nonprinting --show-ends)
 	 */
-	SHOW_NONPRINTING_AND_LINE_BREAK('e') {
+	SHOW_NONPRINTING_AND_ENDS('e') {
 		@Override
 		public HashSet<CommandLineOption<ConcatenateOption>> optionsEqualed() {
-			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(SHOW_NONPRINTING, SHOW_LINE_BREAK));
+			return new HashSet<CommandLineOption<ConcatenateOption>>(Arrays.asList(SHOW_NONPRINTING, SHOW_ENDS));
 		}
 	},
 
 	/**
 	 * display $ at end of each line
 	 */
-	SHOW_LINE_BREAK('E', "show-ends"),
+	SHOW_ENDS('E', "show-ends"),
 
 	/**
 	 * number all output lines
 	 */
-	NUMBER_ALL_LINES('n', "number"),
+	NUMBER('n', "number"),
 
 	/**
 	 * suppress repeated empty output lines
 	 */
-	SQUEZEE_BLANK_LINES('s', "squeeze-blank"),
+	SQUEZEE_BLANK('s', "squeeze-blank"),
 
 	/**
 	 * equivalent to -vT (--show-nonprinting --show-tabs)

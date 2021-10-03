@@ -17,8 +17,9 @@ public enum DateOption implements CommandLineOption<DateOption> {
 	 * 
 	 */
 	SET('s', "set") {
+
 		@Override
-		public boolean requiresArgument() {
+		public boolean requireArgument() {
 			return true;
 		}
 

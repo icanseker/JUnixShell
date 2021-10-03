@@ -2,7 +2,7 @@ package unix.shell.cmd.opt.mod;
 
 import java.util.HashSet;
 
-public interface OptionBehavior<OptionType> {
+public interface OptionInteraction<OptionType> {
 
 	public default HashSet<OptionType> optionsExcluded() {
 		return null;

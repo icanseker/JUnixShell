@@ -8,6 +8,7 @@ import unix.shell.cmd.arg.type.TextBlock;
 import unix.shell.cmd.core.date.format.DateFormat;
 import unix.shell.cmd.core.date.format.ISO_8601_TIMESPEC;
 import unix.shell.cmd.core.date.format.RFC_3339_TIMESPEC;
+import unix.shell.cmd.outline.FieldMap;
 
 /**
  * Display the current time in the given FORMAT, or set the system date.
@@ -16,6 +17,18 @@ public class Date extends UnixCommand<DateOption> {
 
 	public Date() {
 		super("date");
+	}
+
+	/**
+	 * as default, the synopsis of date command is <b>date [OPTION]... [+FORMAT]</b>
+	 * <br>
+	 * as you see we do not define an argument field for "format", because of other
+	 * format options and the format argument could not been together, we use a fake
+	 * option (to exclude other formatting related options). See DateFormat.Custom
+	 */
+	@Override
+	protected FieldMap synopsis() {
+		return new FieldMap();
 	}
 
 	/**

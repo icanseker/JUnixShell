@@ -4,7 +4,7 @@ import unix.shell.cmd.opt.mod.None;
 
 public abstract class SimpleCommand extends UnixCommand<None> {
 
-	public SimpleCommand(String identifier) {
-		super(identifier);
+	public SimpleCommand(String name) throws Exception {
+		super(name);
 	}
 }

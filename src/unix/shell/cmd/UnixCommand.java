@@ -1,14 +1,6 @@
 package unix.shell.cmd;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import unix.shell.cmd.arg.mod.ArgumentBehavior;
+import unix.shell.cmd.arg.mod.ArgumentAct;
 import unix.shell.cmd.arg.mod.ArgumentInterface;
 import unix.shell.cmd.exitstat.StandardUnixExitStatus;
 import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
@@ -17,11 +9,19 @@ import unix.shell.cmd.io.redirect.UnixRedirection;
 import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.mod.CommandLine;
 import unix.shell.cmd.opt.CommandLineOption;
+import unix.shell.cmd.opt.OptionMap;
+import unix.shell.cmd.outline.FieldMap;
 
+/**
+ * Abstract definition of general Unix Command.
+ */
 public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionForm>>
-		implements ClassIdentifier, ArgumentBehavior, CommandLine {
+		implements ClassIdentifier, CommandLine {
 
-	private String identifier;
+	/**
+	 * The official name of this program.
+	 */
+	private String name;
 
 	/**
 	 * Each command has an exit status-reason map, this will be Standard Exit status
@@ -34,27 +34,36 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 	public static final Class<? extends ExitStatusInterface> exitStatusEnumSet = StandardUnixExitStatus.class;
 
 	/**
-	 * Holds arguments of the command if it accepts arguments
+	 * Default command synopsis is <b>COMMAND [OPTION]...</b> (multiple optional
+	 * options)
 	 */
-	private LinkedHashSet<ArgumentInterface> arguments;
+	private static final ArgumentAct DEFAULT_OPTION_ACT = new ArgumentAct() {
+		@Override
+		public boolean require() {
+			return false;
+		}
+
+		@Override
+		public boolean optional() {
+			return true;
+		}
+
+		@Override
+		public boolean multiple() {
+			return true;
+		}
+	};
 
 	/**
-	 * Holds options of command, mapped by option (unique) id
+	 * Holds options of command and arguments of these options
 	 */
-	private LinkedHashMap<String, CommandLineOption<OptionForm>> options;
+	private OptionMap<OptionForm> optionMap;
 
 	/**
-	 * Holds arguments of option, mapped by option (unique) id
+	 * Holds arguments of each field of the command, mapped by argument group
+	 * (grouped by argument function)
 	 */
-	private HashMap<String, Set<ArgumentInterface>> optionArguments;
-
-	/**
-	 * Each option implements OptionBehavior, which means it contains
-	 * exclude/override/equalized option sets (maybe), which will be held here. If
-	 * an option from the ignored set tries to be added to the command options set,
-	 * it will be ignored.
-	 */
-	private HashSet<String> optionsIgnored; // String = unique id of option
+	private FieldMap fieldMap;
 
 	/**
 	 * Redirections will be held here. And the order is critical (because of Unix
@@ -62,83 +71,58 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 	 */
 	private RedirectionMap redirectionMap;
 
-	public UnixCommand(String identifier) {
-
-		this.identifier = identifier;
-		this.arguments = new LinkedHashSet<ArgumentInterface>();
-
-		this.options = new LinkedHashMap<String, CommandLineOption<OptionForm>>();
-		this.optionArguments = new HashMap<String, Set<ArgumentInterface>>();
-		this.optionsIgnored = new HashSet<String>();
-
+	public UnixCommand(String name) {
+		this.name = name;
+		this.optionMap = new OptionMap<OptionForm>();
+		this.fieldMap = synopsis();
 		this.redirectionMap = new RedirectionMap();
 	}
 
-	protected void addOption(CommandLineOption<OptionForm> option, ArgumentInterface... arguments) throws Exception {
-
-		String optIdentifier = option.identifier();
-
-		options.put(optIdentifier, option);
-
-		if (arguments.length != 0 && option.acceptArgument()) {
-
-			optionArguments.put(optIdentifier, new HashSet<ArgumentInterface>());
-
-			if (!option.acceptMultiArgument())
-				optionArguments.get(optIdentifier).add(arguments[0]);
-
-			else
-				optionArguments.get(optIdentifier).addAll(Arrays.asList(arguments));
-		} else
-			optionArguments.remove(optIdentifier);
-
-		HashSet<CommandLineOption<OptionForm>> optionsRelated = null;
-
-		optionsRelated = option.optionsExcluded();
-		if (optionsRelated != null)
-			for (CommandLineOption<?> optionExcluded : optionsRelated) {
-
-				options.remove(optionExcluded.identifier());
-				optionArguments.remove(optionExcluded.identifier());
-			}
-
-		optionsRelated = option.optionsOverridden();
-		if (optionsRelated != null)
-			for (CommandLineOption<?> optionOverridden : optionsRelated)
-				optionsIgnored.add(optionOverridden.identifier());
-
-		optionsRelated = option.optionsEqualed();
-		if (optionsRelated != null)
-			for (CommandLineOption<?> optionEqualed : optionsRelated)
-				optionsIgnored.add(optionEqualed.identifier());
-
-		optionsRelated = option.optionsRequired();
-		if (optionsRelated != null)
-			for (CommandLineOption<OptionForm> optionRequired : optionsRelated)
-				addOption(optionRequired);
-
-		optionsRelated = null;
+	protected ArgumentAct optionAct() {
+		return UnixCommand.DEFAULT_OPTION_ACT;
 	}
 
-	protected void addArgument(ArgumentInterface... arguments) throws Exception {
+	/**
+	 * field map demonstrate command synopsis (except options)
+	 */
+	protected abstract FieldMap synopsis();
 
-		String classId = this.classId();
+	protected void addOption(CommandLineOption<OptionForm> option, ArgumentInterface argument) throws Exception {
 
-		if (this.requiresArgument() && arguments.length == 0)
-			throw new Exception(classId + ": requires an argument");
+		ArgumentAct optionAct = this.optionAct();
 
-		if (this.acceptArgument() && arguments.length > 0) {
+		if (!optionAct.require() && !optionAct.optional())
+			System.err.println("WARNING: " + this.name + " does not accept any options.");
+		else
+			this.optionMap.addOption(option, argument);
+	}
 
-			if (!this.acceptMultiArgument() && arguments.length > 1) {
-				System.err.println("WARNING: " + classId + " does not accept more than one argument");
+	protected void addOption(CommandLineOption<OptionForm> option) throws Exception {
+		addOption(option, null);
+	}
 
-				this.arguments.clear();
-				this.arguments.add(arguments[0]);
-			} else
-				this.arguments.addAll(Arrays.asList(arguments));
+	protected void addArgumentGroup(String groupId, ArgumentAct groupAct) {
+		if (this.fieldMap != null)
+			this.fieldMap.addArgumentGroup(groupId, groupAct);
+	}
 
-		} else if (arguments.length > 0)
-			System.err.println("WARNING: " + classId + " does not accept an argument");
+	protected void addArgument(String groupId, ArgumentInterface... arguments) throws Exception {
+		if (this.fieldMap != null)
+			this.fieldMap.addArgument(groupId, arguments);
+	}
+
+	protected void removeArgumentGroup(String groupId) {
+		if (this.fieldMap != null)
+			this.fieldMap.removeArgumentGroup(groupId);
+	}
+
+	protected void resetArgumentGroup(String groupId, ArgumentAct groupAct) {
+		if (this.fieldMap != null)
+			this.fieldMap.resetArgumentGroup(groupId, groupAct);
+	}
+
+	protected void updateFieldMap(FieldMap fieldMap) {
+		this.fieldMap = fieldMap;
 	}
 
 	@Override
@@ -154,48 +138,22 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 	@Override
 	public String correspond() throws Exception {
 
-		for (String optCorrespond : optionsIgnored) {
-			options.remove(optCorrespond);
-			optionArguments.remove(optCorrespond);
-		}
+		String correspond = this.name;
+		String optCorrespond = this.optionMap.correspond();
 
-		String correspond = this.identifier;
+		if (!optCorrespond.equals(""))
+			correspond += " " + optCorrespond;
 
-		for (Map.Entry<String, CommandLineOption<OptionForm>> optionEntry : options.entrySet()) {
+		if (this.fieldMap != null) {
 
-			CommandLineOption<OptionForm> commandOption = optionEntry.getValue();
-			String optionId = optionEntry.getKey();
+			String fieldMapCorr = this.fieldMap.correspond();
+			if (!fieldMapCorr.equals("")) {
 
-			Set<ArgumentInterface> optionArgs = this.optionArguments.get(optionId);
+				if (fieldMapCorr.startsWith("-") && !fieldMapCorr.startsWith("--"))
+					fieldMapCorr = "--" + fieldMapCorr;
 
-			if (optionArgs != null)
-				correspond += " "
-						+ commandOption.correspond(optionArgs.toArray(new ArgumentInterface[optionArgs.size()]));
-			else
-				correspond += " " + commandOption.correspond();
-		}
-
-		if (!arguments.isEmpty()) {
-
-			String commandArgs = "";
-			for (ArgumentInterface argument : arguments) {
-
-				String commandArg = argument.correspond();
-
-				/**
-				 * Specify two dashes (––) to separate the options from the non option
-				 * arguments; –– means that there are no more options. Thus, if you really have
-				 * a directory named –t, you could specify: ls –– –t to list the contents of
-				 * that directory.
-				 */
-
-				if (commandArg.startsWith("-") && !commandArgs.startsWith("--"))
-					commandArgs = "--" + commandArgs;
-
-				commandArgs += " " + commandArg;
+				correspond += " " + fieldMapCorr;
 			}
-
-			correspond += " " + commandArgs.substring(1);
 		}
 
 		String redirectCorr = redirectionMap.correspond();
@@ -206,14 +164,24 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 	}
 
 	protected void resetOptions() {
-
-		this.options.clear();
-		this.optionArguments.clear();
-		this.optionsIgnored.clear();
+		this.optionMap = new OptionMap<OptionForm>();
 	}
 
-	protected void resetArguments() {
-		this.arguments.clear();
+	public String synopsisCorrespond() {
+
+		String corr = this.name;
+
+		String optCorr = ArgumentAct.actCorrespond("OPTION", optionAct());
+		if (!optCorr.equals(""))
+			corr += " " + optCorr;
+
+		if (this.fieldMap != null) {
+			String argCorr = this.fieldMap.fieldMapCorrespond();
+			if (!argCorr.equals(""))
+				corr += " " + argCorr;
+		}
+
+		return corr;
 	}
 
 	@Override

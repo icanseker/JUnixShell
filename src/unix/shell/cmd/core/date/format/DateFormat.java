@@ -1,6 +1,5 @@
 package unix.shell.cmd.core.date.format;
 
-import unix.shell.cmd.arg.mod.ArgumentInterface;
 import unix.shell.cmd.core.date.DateOption;
 import unix.shell.cmd.opt.SingularOption;
 
@@ -28,7 +27,7 @@ public enum DateFormat implements SingularOption<DateOption> {
 	 */
 	ISO_8601('I', "iso-8601") {
 		@Override
-		public boolean acceptArgument() {
+		public boolean takeOptionalArgument() {
 			return true;
 		}
 	},
@@ -63,7 +62,7 @@ public enum DateFormat implements SingularOption<DateOption> {
 	 */
 	RFC_3339("rfc-3339") {
 		@Override
-		public boolean requiresArgument() {
+		public boolean requireArgument() {
 			return true;
 		}
 	},
@@ -75,15 +74,13 @@ public enum DateFormat implements SingularOption<DateOption> {
 	 */
 	CUSTOM("+") {
 		@Override
-		public boolean requiresArgument() {
+		public boolean requireArgument() {
 			return true;
 		}
 
 		@Override
-		public String correspond(ArgumentInterface... arguments) throws Exception {
-
-			String correspond = super.correspond(arguments); // --+='...' get this form
-			return correspond.replace("--+='", "'+");
+		public String descriptor() {
+			return paramName();
 		}
 	},
 

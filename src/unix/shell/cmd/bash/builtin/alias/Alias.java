@@ -1,9 +1,11 @@
 package unix.shell.cmd.bash.builtin.alias;
 
 import unix.shell.cmd.UnixCommand;
+import unix.shell.cmd.arg.mod.ArgumentAct;
 import unix.shell.cmd.arg.type.Text;
 import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
 import unix.shell.cmd.opt.mod.None;
+import unix.shell.cmd.outline.FieldMap;
 import unix.shell.cmd.param.Parameter;
 
 /**
@@ -21,9 +23,16 @@ public class Alias extends UnixCommand<None> {
 		super("alias");
 	}
 
+	/**
+	 * synopsis is alias [alias-name[=string]...]
+	 */
 	@Override
-	public boolean acceptMultiArgument() {
-		return true;
+	protected FieldMap synopsis() {
+
+		FieldMap synopsis = new FieldMap();
+		synopsis.addArgumentGroup("alias-name", ArgumentAct.OPTIONAL_MULTIPLE);
+
+		return synopsis;
 	}
 
 	/**
@@ -40,20 +49,19 @@ public class Alias extends UnixCommand<None> {
 		if (name.contains(" ") || name.contains("="))
 			throw new IllegalArgumentException("There must be no spaces or equality (=) characters in an alias name.");
 
-		addArgument(new Parameter(name, new Text(definition)));
+		addArgument("alias-name", new Parameter(name, new Text(definition)));
 	}
 
 	public void addAlias(String name, UnixCommand<?> definition) throws Exception {
-
-		addArgument(new Parameter(name, new Text(definition.correspond())));
+		addAlias(name, definition.correspond());
 	}
 
 	/**
 	 * With no options, the alias command will return a list of all aliases in the
-	 * environment.
+	 * environment and it synopsis will change.
 	 */
 	public void all() {
 		resetOptions();
-		resetArguments();
+		removeArgumentGroup("alias-name");
 	}
 }

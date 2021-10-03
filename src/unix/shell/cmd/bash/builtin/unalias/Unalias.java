@@ -1,8 +1,10 @@
 package unix.shell.cmd.bash.builtin.unalias;
 
 import unix.shell.cmd.UnixCommand;
+import unix.shell.cmd.arg.mod.ArgumentAct;
 import unix.shell.cmd.arg.type.CharChain;
 import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
+import unix.shell.cmd.outline.FieldMap;
 
 /**
  * The alias utility shall create or redefine alias definitions or write the
@@ -19,9 +21,20 @@ public class Unalias extends UnixCommand<UnaliasOption> {
 		super("unalias");
 	}
 
+	/**
+	 * unalias has two different synopsis: <b>unalias alias-name...<b/> (will be
+	 * default) and <b>unalias -a</b>
+	 * 
+	 * <p/>
+	 * When -a option is added to unalias, the synopsis will be updated.
+	 */
 	@Override
-	public boolean acceptMultiArgument() {
-		return true;
+	protected FieldMap synopsis() {
+
+		FieldMap synopsis = new FieldMap();
+		synopsis.addArgumentGroup("alias-name", ArgumentAct.REQUIRE_MULTIPLE);
+
+		return synopsis;
 	}
 
 	/**
@@ -35,17 +48,13 @@ public class Unalias extends UnixCommand<UnaliasOption> {
 	 */
 	public void removeAlias(String name) throws Exception {
 
-		resetOptions();
-
 		if (name.contains(" ") || name.contains("="))
 			return;
-
-		addArgument(new CharChain(name.toCharArray()));
+		addArgument("alias-name", new CharChain(name.toCharArray()));
 	}
 
 	public void removeAll() throws Exception {
-
-		resetArguments();
+		removeArgumentGroup("alias-name");
 		addOption(UnaliasOption.REMOVE_ALL);
 	}
 }

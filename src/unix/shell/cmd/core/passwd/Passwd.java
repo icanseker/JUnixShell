@@ -1,9 +1,11 @@
 package unix.shell.cmd.core.passwd;
 
 import unix.shell.cmd.UnixCommand;
+import unix.shell.cmd.arg.mod.ArgumentAct;
 import unix.shell.cmd.arg.type.NumericValue;
 import unix.shell.cmd.arg.type.Text;
 import unix.shell.cmd.exitstat.mod.ExitStatusInterface;
+import unix.shell.cmd.outline.FieldMap;
 
 /**
  * 
@@ -20,14 +22,21 @@ public class Passwd extends UnixCommand<PasswdOption> {
 		super("passwd");
 	}
 
+	/**
+	 * passwd [options] [LOGIN]
+	 */
 	@Override
-	public boolean acceptArgument() {
-		return true;
+	protected FieldMap synopsis() {
+
+		FieldMap synopsis = new FieldMap();
+		synopsis.addArgumentGroup("login", ArgumentAct.OPTIONAL_ONE);
+
+		return synopsis;
 	}
 
 	public Passwd forDifferentUser(String username) throws Exception {
 
-		addArgument(new Text(username));
+		addArgument("login", new Text(username));
 		return this;
 	}
 
