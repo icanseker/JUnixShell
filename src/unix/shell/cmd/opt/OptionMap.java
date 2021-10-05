@@ -11,8 +11,8 @@ import unix.shell.cmd.mod.StrCorrespond;
 public class OptionMap<OptionForm extends CommandLineOption<OptionForm>> implements StrCorrespond {
 
 	/**
-	 * Holds options of command, mapped by option (unique) id, because of singular
-	 * options' ids are the same, it will override each other.
+	 * Holds options of command, mapped by option (unique) id, because of options'
+	 * ids of grouped are the same, it will override each other.
 	 */
 	private LinkedHashMap<String, CommandLineOption<OptionForm>> options;
 
@@ -29,8 +29,9 @@ public class OptionMap<OptionForm extends CommandLineOption<OptionForm>> impleme
 	 * it will be ignored.
 	 * 
 	 * <p/>
-	 * if an option is singular and is ignored, then all other options have same id
-	 * will be ignored. if we don't need this, we can change this.
+	 * if an option is grouped some others and is ignored, then all other options
+	 * have in same option group will be ignored. if we don't need this, we can
+	 * change this.
 	 */
 	private HashSet<String> optionsIgnored; // mapped by unique id of option
 
@@ -47,10 +48,13 @@ public class OptionMap<OptionForm extends CommandLineOption<OptionForm>> impleme
 		if (argument == null) {
 			if (option.requireArgument())
 				throw new Exception(descriptor + ": requires an argument");
+
+			options.put(option.identifier(), option);
+
 		} else {
 
 			/*
-			 * if the option is Singular, it is identifier will be singular identifier
+			 * if the option is grouped, it identifier will be singular.
 			 */
 			options.put(option.identifier(), option);
 

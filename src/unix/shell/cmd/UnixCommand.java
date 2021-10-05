@@ -8,9 +8,11 @@ import unix.shell.cmd.io.redirect.RedirectionMap;
 import unix.shell.cmd.io.redirect.UnixRedirection;
 import unix.shell.cmd.mod.ClassIdentifier;
 import unix.shell.cmd.mod.CommandLine;
+import unix.shell.cmd.mod.VariformCommand;
 import unix.shell.cmd.opt.CommandLineOption;
 import unix.shell.cmd.opt.OptionMap;
 import unix.shell.cmd.outline.FieldMap;
+import unix.shell.cmd.outline.SynopsisException;
 
 /**
  * Abstract definition of general Unix Command.
@@ -32,27 +34,6 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 	 * on exit status.
 	 */
 	public static final Class<? extends ExitStatusInterface> exitStatusEnumSet = StandardUnixExitStatus.class;
-
-	/**
-	 * Default command synopsis is <b>COMMAND [OPTION]...</b> (multiple optional
-	 * options)
-	 */
-	private static final ArgumentAct DEFAULT_OPTION_ACT = new ArgumentAct() {
-		@Override
-		public boolean require() {
-			return false;
-		}
-
-		@Override
-		public boolean optional() {
-			return true;
-		}
-
-		@Override
-		public boolean multiple() {
-			return true;
-		}
-	};
 
 	/**
 	 * Holds options of command and arguments of these options
@@ -78,8 +59,12 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 		this.redirectionMap = new RedirectionMap();
 	}
 
+	/**
+	 * Default command synopsis is <b>COMMAND [OPTION]...</b> (multiple optional
+	 * options)
+	 */
 	protected ArgumentAct optionAct() {
-		return UnixCommand.DEFAULT_OPTION_ACT;
+		return ArgumentAct.OPTIONAL_MULTIPLE;
 	}
 
 	/**
@@ -139,6 +124,13 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 	public String correspond() throws Exception {
 
 		String correspond = this.name;
+
+		if (this instanceof VariformCommand) {
+			CommandLineOption<?> formOption = ((VariformCommand<?>) this).variform();
+			if (formOption != null)
+				correspond += " " + formOption.descriptor();
+		}
+
 		String optCorrespond = this.optionMap.correspond();
 
 		if (!optCorrespond.equals(""))
@@ -146,13 +138,15 @@ public abstract class UnixCommand<OptionForm extends CommandLineOption<OptionFor
 
 		if (this.fieldMap != null) {
 
-			String fieldMapCorr = this.fieldMap.correspond();
-			if (!fieldMapCorr.equals("")) {
+			try {
 
-				if (fieldMapCorr.startsWith("-") && !fieldMapCorr.startsWith("--"))
-					fieldMapCorr = "--" + fieldMapCorr;
+				String fieldMapCorr = this.fieldMap.correspond();
+				if (!fieldMapCorr.equals(""))
+					correspond += " " + fieldMapCorr;
 
-				correspond += " " + fieldMapCorr;
+			} catch (Exception e) {
+				System.err.println(synopsisCorrespond());
+				throw new SynopsisException(this.name + " command synopsis error", e);
 			}
 		}
 

@@ -9,6 +9,7 @@ import java.util.Map;
 import unix.shell.cmd.arg.mod.ArgumentAct;
 import unix.shell.cmd.arg.mod.ArgumentInterface;
 import unix.shell.cmd.mod.StrCorrespond;
+import unix.shell.cmd.opt.OptionParameter;
 
 public class FieldMap implements StrCorrespond {
 
@@ -66,32 +67,29 @@ public class FieldMap implements StrCorrespond {
 
 	public void addArgument(String groupId, ArgumentInterface... arguments) throws Exception {
 
-		if (this.actMap.containsKey(groupId)) {
+		if (arguments.length > 0) {
 
-			ArgumentAct act = this.actMap.get(groupId);
+			if (this.actMap.containsKey(groupId)) {
 
-			if (arguments.length == 0) {
+				ArgumentAct act = this.actMap.get(groupId);
 
-				if (act.require()) {
+				if (act.equals(ArgumentAct.NONE))
+					System.err.println("WARNING: " + groupId + " does not accept argument");
+				else {
 
-					if (act.multiple())
-						throw new Exception(groupId + " requires at least one argument");
+					if (!this.argumentMap.containsKey(groupId))
+						this.argumentMap.put(groupId, new LinkedHashSet<ArgumentInterface>());
 
-					throw new Exception(groupId + " requires an argument");
+					if (!act.multiple()) {
+						this.argumentMap.get(groupId).add(arguments[0]);
+						System.err.println("WARNING: " + groupId + " does not accept more then one argument");
+					} else
+						this.argumentMap.get(groupId).addAll(Arrays.asList(arguments));
 				}
-			} else {
 
-				if (!this.argumentMap.containsKey(groupId))
-					this.argumentMap.put(groupId, new LinkedHashSet<ArgumentInterface>());
-
-				if (!act.multiple()) {
-					this.argumentMap.get(groupId).add(arguments[0]);
-					System.err.println("WARNING: " + groupId + " does not accept more then one argument");
-				} else
-					this.argumentMap.get(groupId).addAll(Arrays.asList(arguments));
-			}
-		} else
-			System.err.println("WARNING: Does not have an argument group: " + groupId);
+			} else
+				System.err.println("WARNING: Does not have an argument group: " + groupId);
+		}
 	}
 
 	@Override
@@ -100,16 +98,49 @@ public class FieldMap implements StrCorrespond {
 		String corr = "";
 
 		/*
+		 * We need to use a double-dash -- anytime our non-option arguments start with a
+		 * hyphen. If we don't terminate option processing, commands will try to
+		 * interpret non-option arguments as options, and most likely fail. So that, we
+		 * have to check if the first argument is OptionParameter or not.
+		 */
+		Class<?> firstArgClass = null;
+
+		/*
 		 * Do not break the order
 		 */
-		for (String groupId : this.actMap.keySet())
-			for (ArgumentInterface argument : this.argumentMap.get(groupId))
-				corr += argument.correspond();
+		for (Map.Entry<String, ArgumentAct> groupEntry : this.actMap.entrySet()) {
+
+			String groupId = groupEntry.getKey();
+			ArgumentAct argumentAct = groupEntry.getValue();
+			LinkedHashSet<ArgumentInterface> groupArgs = this.argumentMap.get(groupId);
+
+			if (groupArgs == null) {
+				if (argumentAct.require()) {
+					if (argumentAct.multiple())
+						throw new Exception("Field group of \"" + groupId + "\" requires at least one argument");
+					throw new Exception("Field group of \"" + groupId + "\" requires an argument");
+				}
+			} else {
+				for (ArgumentInterface argument : this.argumentMap.get(groupId)) {
+					corr += " " + argument.correspond();
+
+					if (firstArgClass == null)
+						firstArgClass = argument.getClass();
+				}
+			}
+		}
 
 		if (corr.equals(""))
 			return "";
 
-		return corr.substring(1);
+		corr = corr.substring(1);
+
+		if (!firstArgClass.equals(OptionParameter.class)) {
+			if (corr.startsWith("-") && !corr.startsWith("-- "))
+				corr = "-- " + corr;
+		}
+
+		return corr;
 	}
 
 	public String fieldMapCorrespond() {

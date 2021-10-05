@@ -29,7 +29,7 @@ public abstract class Argument implements ArgumentInterface {
 		return true;
 	}
 
-	public static Argument[] setOf(String... arguments) throws Exception {
+	public static Argument[] array(String... arguments) throws Exception {
 
 		Argument[] set = new Argument[arguments.length];
 

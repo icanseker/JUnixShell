@@ -10,6 +10,14 @@ public interface CommandLineOption<OptionType extends CommandLineOption<OptionTy
 
 	public String paramName();
 
+	public default boolean requireArgument() {
+		return false;
+	}
+
+	public default boolean takeOptionalArgument() {
+		return requireArgument() || false;
+	}
+
 	public default String identifier() {
 		return descriptor();
 	}
@@ -22,13 +30,5 @@ public interface CommandLineOption<OptionType extends CommandLineOption<OptionTy
 			return "--" + paramName();
 		else
 			return "-" + String.valueOf(symbol);
-	}
-
-	public default boolean requireArgument() {
-		return false;
-	}
-
-	public default boolean takeOptionalArgument() {
-		return requireArgument() || false;
 	}
 }

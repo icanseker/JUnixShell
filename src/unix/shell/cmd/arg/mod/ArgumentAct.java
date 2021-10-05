@@ -89,6 +89,27 @@ public interface ArgumentAct {
 		}
 	};
 
+	/**
+	 * .
+	 */
+	public static final ArgumentAct REQUIRE = new ArgumentAct() {
+
+		@Override
+		public boolean require() {
+			return true;
+		}
+
+		@Override
+		public boolean optional() {
+			return false;
+		}
+
+		@Override
+		public boolean multiple() {
+			return false;
+		}
+	};
+
 	public static String actCorrespond(String argumentName, ArgumentAct act) {
 
 		if (act.require()) {
